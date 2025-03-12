@@ -6,14 +6,14 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/09 22:26:03 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/03/12 21:50:54 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # define PROMPT "minishell$ "
-#define MAXARGS 10
+# define MAXARGS 10
 
 # include "lib/libft/libft.h"
 # include <unistd.h>
@@ -64,6 +64,7 @@ typedef struct redircmd
 	char *file;
 	char *efile;
 	int mode;
+	mode_t right;
 	int fd;
 }	t_redircmd;
 
@@ -126,5 +127,30 @@ void	safe_free_minishell(t_minishell *minishell);
 // str_util
 int ft_strcountchr(char *str, char chr);
 char	*trim_space_char(char *input);
+
+// token.c
+int	gettoken(char **ps, char *es, char **q, char **eq);
+int	peek(char **ps, char *es, char *toks);
+
+// command.c
+struct cmd* execcmd(void);
+struct cmd* parseexec(char **ps, char *es);
+struct cmd* parsecmd(char *s);
+void runcmd(struct cmd *cmd);
+void exec_command(char *command, char **args);
+
+// redirection.c
+struct cmd* redircmd(struct cmd *subcmd, char *file, char *efile, int mode, mode_t right, int fd);
+struct cmd* parseredirs(struct cmd *cmd, char **ps, char *es);
+
+// pipe.c
+struct cmd* pipecmd(struct cmd *left, struct cmd *right);
+struct cmd* parsepipe(char **ps, char *es);
+struct cmd* parseline(char **ps, char *es);
+
+// line.c
+struct cmd* nulterminate(struct cmd *cmd);
+void panic(char *s);
+int fork1(void);
 
 #endif

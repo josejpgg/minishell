@@ -1,0 +1,22 @@
+cat <./minishell_tester/test_files/infile_big ./minishell_tester/test_files/infile
+
+cat <./minishell_tester/test_files/infile_big | grep www.gutenberg.org
+
+cat <./minishell_tester/test_files/infile | grep hello
+
+grep jgamarra main.c | wc -l > test
+ls main.c > test | more < test
+ls -l | wc -l
+ls -l | grep main.c | wc -l
+wc -l < main.c | cat
+ls | cat
+ls | wc
+pwd | wc
+ls | ls | wc
+ls | pwd | wc
+
+
+1. rebuild exit message controlling fd error out ✅
+2. replace exit message function in the code ✅
+3. make new files to split functions 
+4. control built-ins

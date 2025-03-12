@@ -222,7 +222,7 @@ main(int argc, char **argv)
   static char buf[100];
   int fd;
 
-  int debug_mode = 0;
+  int debug_mode = 1;
 
   // Ensure that three file descriptors are open.
 //   while((fd = open("console", O_RDWR)) >= 0){

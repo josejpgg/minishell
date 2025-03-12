@@ -1,4 +1,0 @@
-cat <./minishell_tester/test_files/infile_big ./minishell_tester/test_files/infile
-
-cat <./minishell_tester/test_files/infile | grep hello
-
