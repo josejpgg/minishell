@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 11:43:00 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/11 23:15:00 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/03/15 17:27:17 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,10 @@ void	valid_inital_param(int argc, char **envp, t_minishell *minishell)
 	init_env(minishell, envp);
 }
 
-
+void prepare_minishell(t_minishell *minishell)
+{
+	// minishell = safe_malloc(sizeof(t_minishell));
+	minishell->path_env = NULL;
+	minishell->env = NULL;
+	minishell->status = 0;
+}

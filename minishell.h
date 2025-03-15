@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/12 21:50:54 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/03/15 21:18:23 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,38 @@ typedef enum e_type
 	REDIR,
 	PIPE,
 	HDOC,
+	ECHO,
+	CD,
+	PWD,
+	EXPORT,
+	UNSET,
+	ENV,
+	EXIT,
 }	t_type;
+
+typedef struct minishell
+{
+	char	**path_env;
+	char	**env;
+	int		status; // last command status
+}	t_minishell;
+
+typedef struct echocmd
+{
+	int type;
+	bool new_line;
+	bool simple_quote;
+	bool double_quote;
+}	t_echocmd;
 
 typedef struct cmd
 {
-  t_type type;
+	t_type type;
 }	t_cmd;
 
 typedef struct execcmd
 {
-	t_type type;
+	int type;
 	char *argv[MAXARGS];
 	char *eargv[MAXARGS];
 }	t_execcmd;
@@ -94,18 +116,12 @@ typedef struct s_response
 	char		*cause;
 }	t_response;
 
-typedef struct minishell
-{
-	char	**path_env;
-	char	**env;
-}	t_minishell;
-
 // env
 void		init_env(t_minishell *minishell, char **envp);
-int			ft_env(char **envp, char *key, char *value);
 
 //params
 void	valid_inital_param(int argc, char **envp, t_minishell *minishell);
+void prepare_minishell(t_minishell *minishell);
 
 //safe func
 void	*safe_malloc(size_t size);
@@ -133,14 +149,17 @@ int	gettoken(char **ps, char *es, char **q, char **eq);
 int	peek(char **ps, char *es, char *toks);
 
 // command.c
-struct cmd* execcmd(void);
+struct cmd* execcmd();
 struct cmd* parseexec(char **ps, char *es);
 struct cmd* parsecmd(char *s);
-void runcmd(struct cmd *cmd);
+void runcmd(struct cmd *cmd, t_minishell *minishell);
 void exec_command(char *command, char **args);
+void control_cmd(t_cmd *cmd, t_minishell *minishell);
 
 // redirection.c
+// struct cmd* redircmd(struct cmd *subcmd, char *file, char *efile, int mode, mode_t right, int fd);
 struct cmd* redircmd(struct cmd *subcmd, char *file, char *efile, int mode, mode_t right, int fd);
+// struct cmd* parseredirs(struct cmd *cmd, char **ps, char *es);
 struct cmd* parseredirs(struct cmd *cmd, char **ps, char *es);
 
 // pipe.c
@@ -152,5 +171,24 @@ struct cmd* parseline(char **ps, char *es);
 struct cmd* nulterminate(struct cmd *cmd);
 void panic(char *s);
 int fork1(void);
+
+// cmd_controller
+t_cmd *prepare_builtins(t_cmd *cmd, t_minishell *minishell);
+char *ft_strreplace(char *str, char *old, char *new);
+int valid_builtins(t_cmd *cmd);
+
+// cmd_impl
+void run_internal(t_cmd *cmd, t_minishell *minishell);
+void run_external(t_cmd *cmd, t_minishell *minishell);
+
+// vector
+int ft_vector_size(char **split);
+void	print_vector(char **vector);
+
+
+
+
+
+void	print_vector(char **vector);
 
 #endif

@@ -14,9 +14,29 @@ ls | wc
 pwd | wc
 ls | ls | wc
 ls | pwd | wc
-
+cat ./minishell_tester/test_files/infile_big | grep oi
+cat minishell.h | grep ");"$
 
 1. rebuild exit message controlling fd error out ✅
 2. replace exit message function in the code ✅
-3. make new files to split functions 
-4. control built-ins
+3. make new files to split functions ✅
+4. control built-ins ✅
+5. implement echo $? ✅
+	5.1. control pipe ✅
+	5.2. control redirect ✅
+
+
+Pruebas echo
+1. ver como transforma a vector
+2. ejecutar con codigo en duro para saber como debe llevar el valor
+3. controlar comillas sin afectar $
+echo "hola"
+
+Test   2: ✅ cat ./test_files/infile_big | grep oi 
+leftovers: );"$
+syntax
+Test   3: ✅⚠️  cat minishell.h | grep ");"$ 
+mini error = ( );"$ syntax)
+bash error = ( No such file or directory)
+minishell: export: command not found
+
