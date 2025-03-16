@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:45:13 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/15 21:22:28 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/03/16 14:12:54 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,11 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 	if (ft_strstr(ecmd->argv[0], "echo"))
 	{
 		echo = (t_echocmd *)cmd;
+		if (echo->invalid)
+		{
+			minishell->status = 127;//IS OK????
+			return ;
+		}
 		//valid position for echo
 		if (echo->new_line)
 		{

@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:39:59 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/15 21:21:42 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/03/16 15:26:42 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,89 @@ int valid_builtins(t_cmd *cmd)
 
 t_cmd *prepare_builtins(t_cmd *cmd, t_minishell *minishell)
 {
+	t_execcmd *ecmd;
+	int idx;
+	int pos;
+	
+	ecmd = (t_execcmd *)cmd;
+	if (ft_strstr(ecmd->argv[0], "echo"))
+	{
+		// quote validator
+		char quote=0;
+		idx = 1;
+		while (ecmd->argv[idx])
+		{
+			pos = 0;
+			while (ecmd->argv[idx][pos])
+			{
+				if (!quote && (ecmd->argv[idx][pos] == '\'' || ecmd->argv[idx][pos] == '\"'))
+					quote = ecmd->argv[idx][pos];
+				else if (quote && ecmd->argv[idx][pos] == quote)
+					quote = 0;
+				pos++;
+			}
+			idx++;
+		}
+		if (quote)
+		{
+			write(2, "Error: Unmatched quote\n", 23);
+			return (cmd);
+		}
+		// quote validator
+		
+		// new line validator
+		int new_line = 1;
+		idx = 1;
+		while (ecmd->argv[idx] && ft_strstr(ecmd->argv[idx], "-n"))
+		{
+			new_line = 0;
+			idx++;
+		}
+		// new line validator
+
+		// print echo
+		if (!ecmd->argv[idx])
+			write(1, "", 1);
+		while (ecmd->argv[idx])
+		{
+			pos = 0;
+			while (ecmd->argv[idx][pos])
+			{
+				if (!quote && (ecmd->argv[idx][pos] == '\'' || ecmd->argv[idx][pos] == '\"'))
+				{
+					quote = ecmd->argv[idx][pos];
+					pos++;
+					continue ;
+				}
+				else if (quote && ecmd->argv[idx][pos] == quote)
+				{
+					quote = 0;
+					pos++;
+					continue ;
+				}
+				if (quote != '\'' && ecmd->argv[idx][pos] == '$' && ecmd->argv[idx][pos + 1] == '?')
+				{
+					write(1, ft_itoa(minishell->status), ft_strlen(ft_itoa(minishell->status)));
+					pos += 2;
+					continue ;
+				}
+				write(1, &ecmd->argv[idx][pos], 1);
+				pos++;
+			}
+			// print if next element is not empty
+			if (ecmd->argv[idx + 1])
+				write(1, " ", 1);
+			idx++;
+		}
+		if (new_line)
+			write(1, "\n", 1);
+		// print echo
+	}
+	return (cmd);
+}
+
+t_cmd *prepare_builtins_old(t_cmd *cmd, t_minishell *minishell)
+{
 	int internal;
 	t_execcmd *ecmd;
 	t_echocmd *echo;
@@ -41,44 +124,102 @@ t_cmd *prepare_builtins(t_cmd *cmd, t_minishell *minishell)
 		echo->new_line = false;
 		echo->simple_quote = false;
 		echo->double_quote = false;
-		if (ft_strncmp(ecmd->argv[1], "-n", 2) == 0)
-		{
-			echo->new_line = true;
-		}
+		echo->invalid = false;
+		
 		int vectorlen = ft_vector_size(ecmd->argv);
 		int vectorindex = 0;
 		// remove extra -n TODO
-		// remove quotes TODO
+		
+		int index = 0;
+		char quote;
 		if (vectorlen > 1)
 		{
-			// valid quotes
 			while (ecmd->argv[++vectorindex])
 			{
-				if (ft_strchr(ecmd->argv[vectorindex], '\''))
+				//valid if the element is "-n" and skip if it repeat in the next element
+				if (ft_strstr(ecmd->argv[vectorindex], "-n"))
 				{
-					echo->simple_quote = true;
-				}
-				if (ft_strchr(ecmd->argv[vectorindex], '\"'))
-				{
-					echo->double_quote = true;
-				}
-				// valid symbol $?
-				if (echo->double_quote)
-				{
-					if (ft_strstr(ecmd->argv[vectorindex], "$?"))
+					//change value to empty string
+					while (ecmd->argv[vectorindex] && ft_strstr(ecmd->argv[vectorindex], "-n"))
 					{
-						// replace the character $? with a value
-						ecmd->argv[vectorindex] = ft_strreplace(ecmd->argv[vectorindex], "$?", ft_itoa(minishell->status));
+						ecmd->argv[vectorindex] = "";
+						echo->new_line = true;
+						vectorindex++;
+					}
+					if (ecmd->argv[vectorindex] != 0)
+						continue ;
+					else
+						break ;
+				}
+				index = 0;
+				while(ecmd->argv[vectorindex][index] && (ecmd->argv[vectorindex][index] == '\'' || ecmd->argv[vectorindex][index++] == '\"'))
+					;
+				quote = ecmd->argv[vectorindex][index++];
+				if (quote == '\'' || quote == '\"')
+				{
+					while(ecmd->argv[vectorindex][index] && ecmd->argv[vectorindex][index++] == quote)
+						;
+					if (quote != ecmd->argv[vectorindex][index])
+					{
+						echo->invalid = true;
+						printf("Error: Invalid quotes\n");
+						minishell->status = 1;
+						break ;
 					}
 				}
+				
 			}
 		}
-		print_vector(ecmd->argv);
+		else
+		{
+			ecmd->argv[1] = "";
+		}
+		
+		// if (vectorlen > 1)
+		// {
+		// 	// valid quotes
+		// 	print_vector(ecmd->argv);
+		// 	while (ecmd->argv[++vectorindex])
+		// 	{
+		// 		if (ft_strchr(ecmd->argv[vectorindex], '\'') && !echo->double_quote)
+		// 		{
+		// 			if (valid_quotes(ecmd->argv[vectorindex], '\'') && !echo->double_quote)
+		// 			{
+		// 				ecmd->argv[vectorindex] = ft_strtrim(ecmd->argv[vectorindex], "\'");
+		// 				echo->simple_quote = true;
+		// 			}
+		// 			else
+		// 			{
+		// 				printf("Error: Invalid quotes\n");
+		// 				echo->invalid = true;
+		// 				break ;
+		// 			}
+		// 		}
+		// 		if (ft_strchr(ecmd->argv[vectorindex], '\"') && !echo->simple_quote)
+		// 		{
+		// 			if (valid_quotes(ecmd->argv[vectorindex], '\"') && !echo->simple_quote)
+		// 			{
+		// 				ecmd->argv[vectorindex] = ft_strtrim(ecmd->argv[vectorindex], "\"");
+		// 				echo->double_quote = true;
+		// 			}
+		// 			else
+		// 			{
+		// 				printf("Error: Invalid quotes\n");
+		// 				echo->invalid = true;
+		// 				break ;
+		// 			}
+		// 		}
+		// 		// valid symbol $?
+		// 		if (ft_strstr(ecmd->argv[vectorindex], "$?") && echo->simple_quote == false)
+		// 		{
+		// 			// replace the character $? with a value
+		// 			printf("replace character\n");
+		// 			ecmd->argv[vectorindex] = ft_strreplace(ecmd->argv[vectorindex], "$?", ft_itoa(minishell->status));
+		// 		}
+		// 	}
+		// }
+		// // print_vector(ecmd->argv);
 		return((t_cmd *)echo);
-		// ft_echo(ecmd->argv);
-		// print_vector(minishell->env);
-		// ft_printf("%d\n", ecmd->minishell->status);
-		// exit(0);
 	}
 	else if (ft_strstr(ecmd->argv[0], "cd"))
 	{
@@ -113,45 +254,3 @@ t_cmd *prepare_builtins(t_cmd *cmd, t_minishell *minishell)
 	return (cmd);
 }
 
-// Function to replace a string with another string
-// the first value is the main string
-// the second value is the string to be find and replaced
-// the third value is the string to replace
-char *ft_strreplace(char *str, char *old, char *new)
-{
-	char *result;
-	int i, count = 0;
-	int newlen = ft_strlen(new);
-	int oldlen = ft_strlen(old);
-
-	// Counting the number of times old word
-	// occur in the string
-	for (i = 0; str[i] != '\0'; i++)
-	{
-		if (ft_strstr(&str[i], old) == &str[i])
-		{
-			count++;
-			// Jumping to index after the old word.
-			i += oldlen - 1;
-		}
-	}
-
-	// Making new string of enough length
-	result = (char *)safe_malloc(i + count * (newlen - oldlen) + 1);
-
-	i = 0;
-	while (*str)
-	{
-		// compare the substring with the result
-		if (ft_strstr(str, old) == str)
-		{
-			strcpy(&result[i], new);
-			i += newlen;
-			str += oldlen;
-		}
-		else
-			result[i++] = *str++;
-	}
-	result[i] = '\0';
-	return (result);
-}

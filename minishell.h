@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/15 21:18:23 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/03/16 13:58:36 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ typedef struct echocmd
 	bool new_line;
 	bool simple_quote;
 	bool double_quote;
+	bool invalid;
 }	t_echocmd;
 
 typedef struct cmd
@@ -143,6 +144,8 @@ void	safe_free_minishell(t_minishell *minishell);
 // str_util
 int ft_strcountchr(char *str, char chr);
 char	*trim_space_char(char *input);
+char *ft_strreplace(char *str, char *old, char *new);
+bool valid_quotes(char *input, char quote);
 
 // token.c
 int	gettoken(char **ps, char *es, char **q, char **eq);
@@ -174,7 +177,6 @@ int fork1(void);
 
 // cmd_controller
 t_cmd *prepare_builtins(t_cmd *cmd, t_minishell *minishell);
-char *ft_strreplace(char *str, char *old, char *new);
 int valid_builtins(t_cmd *cmd);
 
 // cmd_impl
@@ -184,10 +186,12 @@ void run_external(t_cmd *cmd, t_minishell *minishell);
 // vector
 int ft_vector_size(char **split);
 void	print_vector(char **vector);
-
-
-
-
+void	safe_free_vector_elem(char **split);
+char	**ft_vector_add_first(char **vector, char *new);
+void	ft_vector_remove_last_element(char **argv);
+void	ft_vector_trim(char **argv);
+void replace_element_index(char **split, int index, char *tmp);
+char	**add_next_index_element(char **split, int index, char *tmp);
 
 void	print_vector(char **vector);
 

@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:27:25 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/15 21:17:43 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/03/16 15:19:15 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,10 +140,10 @@ void runcmd(struct cmd *cmd, t_minishell *minishell)
 	print_vector(ecmd->argv);
     if (ecmd->argv[0] == 0)
       exit(0);
-	if (valid_builtins(ecmd))
+	if (valid_builtins(cmd))
 	{
 		cmd = prepare_builtins(cmd, minishell);
-		run_internal(cmd, minishell);
+		// run_internal(cmd, minishell);
 	}
 	else
 	{
@@ -227,7 +227,7 @@ void control_cmd(t_cmd *cmd, t_minishell *minishell)
 	if (valid_builtins(cmd))
 	{
 		cmd = prepare_builtins(cmd, minishell);
-		run_internal(cmd, minishell);
+		// run_internal(cmd, minishell);
 	}
 	else
 	{
