@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:27:25 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/16 15:19:15 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/03/16 18:22:41 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,13 @@ struct cmd *parseexec(char **ps, char *es)
   struct execcmd *cmd;
   struct cmd *ret;
 
-  //   if(peek(ps, es, "("))
-  //     return parseblock(ps, es);
-  // printf("ps: %s\n", *ps);
   ret = execcmd();
   cmd = (struct execcmd *)ret;
 
   argc = 0;
-  ret = parseredirs(ret, ps, es);
-  while (!peek(ps, es, "|)&;"))
+//   ret = parseredirs(ret, ps, es); JGG IS OK REMOVE?
+//   while (!peek(ps, es, "|)&;"))
+  while (!peek(ps, es, "|"))
   { // loop character by character
     if ((tok = gettoken(ps, es, &q, &eq)) == 0)
       break;
@@ -49,9 +47,9 @@ struct cmd *parseexec(char **ps, char *es)
     if (argc >= MAXARGS)
       panic("too many args");
     ret = parseredirs(ret, ps, es);
+	// printf("tok: %d\n", tok);
   }
-  // print_vector(cmd->argv);
-  // print_vector(cmd->eargv);
+//   print_vector(cmd->argv);
   cmd->argv[argc] = 0;
   cmd->eargv[argc] = 0;
   return ret;
@@ -106,7 +104,7 @@ struct cmd *parsecmd(char *s)
   peek(&s, es, "");
   if (s != es)
   {
-    ft_putstr_fd("leftovers jgg: ", 2);
+    ft_putstr_fd("leftovers: ", 2);
     ft_putstr_fd(s, 2);
     ft_putchar_fd('\n', 2);
     panic("syntax");
@@ -142,8 +140,8 @@ void runcmd(struct cmd *cmd, t_minishell *minishell)
       exit(0);
 	if (valid_builtins(cmd))
 	{
-		cmd = prepare_builtins(cmd, minishell);
-		// run_internal(cmd, minishell);
+		// cmd = prepare_builtins(cmd, minishell);
+		run_internal(cmd, minishell);
 	}
 	else
 	{
@@ -226,8 +224,8 @@ void control_cmd(t_cmd *cmd, t_minishell *minishell)
 {
 	if (valid_builtins(cmd))
 	{
-		cmd = prepare_builtins(cmd, minishell);
-		// run_internal(cmd, minishell);
+		// cmd = prepare_builtins(cmd, minishell);
+		run_internal(cmd, minishell);
 	}
 	else
 	{

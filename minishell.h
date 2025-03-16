@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/16 13:58:36 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/03/16 16:55:47 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,7 +176,6 @@ void panic(char *s);
 int fork1(void);
 
 // cmd_controller
-t_cmd *prepare_builtins(t_cmd *cmd, t_minishell *minishell);
 int valid_builtins(t_cmd *cmd);
 
 // cmd_impl

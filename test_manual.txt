@@ -32,11 +32,26 @@ Pruebas echo
 3. controlar comillas sin afectar $
 echo "hola"
 
-Test   2: ✅ cat ./test_files/infile_big | grep oi 
-leftovers: );"$
-syntax
-Test   3: ✅⚠️  cat minishell.h | grep ");"$ 
-mini error = ( );"$ syntax)
-bash error = ( No such file or directory)
-minishell: export: command not found
 
+Test  17: ❌ echo "$" 
+mini output = ()
+bash output = ($)
+Test  18: ✅ echo '$' 
+Test  19: ❌ echo $ 
+mini output = ()
+bash output = ($)
+
+echo "> >> < * ? [ ] | ; [ ] || && ( ) & # $  <<"
+mini
+> >> < * ? [ ] | ; [ ] || && ( ) & # $  <<
+bash
+> >> < * ? [ ] | ; [ ] || && ( ) & # $  <<
+
+Test  17: ❌ echo "$" 
+mini output = ($")
+bash output = ($)
+
+
+> >> < * ? [ ] | ; [ ] || && ( ) & # $ \ <<
+
+> >> < * ? [ ] | ; [ ] || && ( ) & # $\ <<

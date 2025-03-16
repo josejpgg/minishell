@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:29:04 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/15 16:19:52 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/03/16 17:41:32 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ struct cmd* parseredirs(struct cmd *cmd, char **ps, char *es)
     case '>':
       cmd = redircmd(cmd, q, eq, O_CREAT|O_WRONLY|O_TRUNC, 0644, 1);
       break;
-    case '+':  // >>, append??
+    case '+':  // >>
       cmd = redircmd(cmd, q, eq, O_CREAT|O_WRONLY|O_APPEND, 0644, 1);
       break;
-    // << heredoc
+    // << heredoc to -
     }
   }
   return cmd;

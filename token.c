@@ -6,14 +6,14 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:25:10 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/12 21:26:26 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/03/16 19:47:33 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 char whitespace[] = " \t\r\n\v";
-char symbols[] = "<|>&;()";
+char symbols[] = "<|>";
 
 int	gettoken(char **ps, char *es, char **q, char **eq)
 {
@@ -44,10 +44,34 @@ int	gettoken(char **ps, char *es, char **q, char **eq)
       s++;
     }
     break;
+  case '"':
+  case '\'':
+    ret = *s;
+    s++;
+    while(s < es && *s != ret)
+      s++;
+    if(s < es)
+      s++;
+    ret = 'a';
+    while(s < es && !strchr(whitespace, *s) && !strchr(symbols, *s))
+      s++;
+    break;
   default:
     ret = 'a';
     while(s < es && !strchr(whitespace, *s) && !strchr(symbols, *s))
       s++;
+    // int quote=0;
+    // while(s < es && !strchr(whitespace, *s) && !strchr(symbols, *s))
+    // {
+    //   if (!quote && (*s == '\'' || *s == '\"'))
+		// 			quote = *s;
+    //   else if (quote && quote == *s)
+    //     quote = 0;
+    //   if (!quote && strchr(symbols, *s) && strchr(whitespace, *s))
+    //     break;
+    //   else
+    //     s++;
+    // }
     break;
   }
   if(eq)
