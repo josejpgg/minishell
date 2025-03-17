@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:45:13 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/16 19:34:30 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/03/17 22:06:30 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,6 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 	// print_vector(ecmd->argv);
 	if (ft_strstr(ecmd->argv[0], "echo"))
 	{
-		// PENDING
-		// CONTROL ENVIRONMENT VARIABLES
-
 		// quote validator
 		char quote=0;
 		idx = 1;
@@ -150,6 +147,60 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 		if (new_line)
 			write(1, "\n", 1);
 		// print echo
+	}
+	else if (ft_strstr(ecmd->argv[0], "pwd"))
+	{
+		char *pwd = getcwd(NULL, 0);
+		if (!pwd)
+		{
+			printf("pwd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n");
+			minishell->status = 1;
+			return ;
+		}
+		write(1, pwd, ft_strlen(pwd));
+		write(1, "\n", 1);
+		free(pwd);
+		minishell->status = 0;
+	}
+	else if (ft_strstr(ecmd->argv[0], "cd"))
+	{
+		// no more than 1 argument
+		minishell->status = 0;
+		if (ft_vector_size(ecmd->argv) > 2)
+		{
+			printf("cd: too many arguments\n");
+			minishell->status = 1;
+			return ;
+		}
+		else if (ft_vector_size(ecmd->argv) < 2)
+		{
+			// not only one param. IMPLEMENT GO HOME????
+			printf("cd: syntax error\n");
+			minishell->status = 1;
+			return ;
+		}
+		// move directory
+		if (chdir(ecmd->argv[1]) != 0)
+		{
+			printf("cd: no such file or directory: %s\n", ecmd->argv[1]);
+			minishell->status = 1;
+		}
+		set_env_value(minishell, "OLDPWD", get_env_value(minishell, "PWD"));
+		set_env_value(minishell, "PWD", getcwd(NULL, 0));
+	}
+	else if (ft_strstr(ecmd->argv[0], "env"))
+	{
+		int i = 0;
+		while (minishell->env[i])
+		{
+			write(1, minishell->env[i], ft_strlen(minishell->env[i]));
+			write(1, "\n", 1);
+			i++;
+		}
+	}
+	else if (ft_strstr(ecmd->argv[0], "exit"))
+	{
+		exit(0);
 	}
 }
 

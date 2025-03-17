@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/16 16:55:47 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/03/17 21:51:44 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,8 @@ typedef struct s_response
 
 // env
 void		init_env(t_minishell *minishell, char **envp);
+char *get_env_value(t_minishell *minishell, char *key);
+void set_env_value(t_minishell *minishell, char *key, char *value);
 
 //params
 void	valid_inital_param(int argc, char **envp, t_minishell *minishell);
