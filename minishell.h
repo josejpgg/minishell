@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/17 21:51:44 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/03/20 22:50:50 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,6 +183,11 @@ int valid_builtins(t_cmd *cmd);
 // cmd_impl
 void run_internal(t_cmd *cmd, t_minishell *minishell);
 void run_external(t_cmd *cmd, t_minishell *minishell);
+
+// cmd_util.c
+void expand_variable(t_cmd *cmd, int idx, int *pos, t_minishell *minishell);
+int is_valid_quote(t_cmd *cmd, t_minishell *minishell);
+char *getenv_minishell(t_minishell *minishell, char *key);
 
 // vector
 int ft_vector_size(char **split);

@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 22:34:17 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/16 14:07:02 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/03/22 14:07:56 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	main(int argc, char **argv, char **envp)
 			free(line);
 		}
 		// REPLACE COMMENT FOR TESTER
-		catch_interactive(input, PROMPT);
+		// catch_interactive(input, PROMPT);
 		input = check_input_valid(input);
 		if (input[0] == '\0')
 		{
