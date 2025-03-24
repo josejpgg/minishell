@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:45:13 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/24 21:56:23 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/03/24 21:59:56 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -332,12 +332,6 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 			//TODO print all environment variables sorted
 			minishell->status = 0;
 		}
-		// while (condition)
-		// {
-		// 	/* code */
-		}
-		
-
 	}
 	else if (ft_strstr(ecmd->argv[0], "unset"))
 	{
