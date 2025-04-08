@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 14:30:08 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/15 20:39:56 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/04 22:34:04 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,22 +120,22 @@ char	**add_next_index_element(char **split, int index, char *tmp)
 /*
 * Function to remove quotes from the element.
 */
-void remove_quotes(char **split, char quote)
-{
-	int i;
-	int j;
-	char *tmp;
+// void remove_quotes(char **split, char quote)
+// {
+// 	int i;
+// 	int j;
+// 	char *tmp;
 
-	i = -1;
-	while (split[++i])
-	{
-		if (ft_strchr(split[i], quote))
-		{
-			tmp = ft_strtrim(split[i], &quote);
-			replace_element_index(split, i, tmp);
-		}
-	}
-}
+// 	i = -1;
+// 	while (split[++i])
+// 	{
+// 		if (ft_strchr(split[i], quote))
+// 		{
+// 			tmp = ft_strtrim(split[i], &quote);
+// 			replace_element_index(split, i, tmp);
+// 		}
+// 	}
+// }
 
 void	print_vector(char **vector)
 {

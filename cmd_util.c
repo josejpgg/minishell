@@ -6,13 +6,13 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 22:35:51 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/22 13:47:34 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/04 22:26:35 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void expand_variable(t_cmd *cmd, int idx, int *pos, t_minishell *minishell)
+void print_expand_variable(t_cmd *cmd, int idx, int *pos, t_minishell *minishell)
 {
 	int extend;
 	char *str;
@@ -77,5 +77,7 @@ char *getenv_minishell(t_minishell *minishell, char *key)
 		if (ft_strncmp(minishell->env[i], key, len) == 0 && minishell->env[i][len] == '=')
 			return (&minishell->env[i][len + 1]);
 	}
-	return (0);
+	return (ft_strdup(""));
 }
+
+

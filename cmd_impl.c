@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:45:13 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/24 21:59:56 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/08 23:02:35 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,12 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 	int pos;
 	
 	ecmd = (t_execcmd *)cmd;
-	// print_vector(ecmd->argv);
+	print_vector(ecmd->argv);
 	char quote=0;
 	if (ft_strstr(ecmd->argv[0], "echo"))
 	{
 		// minishell->status = 0;
 		// quote validator
-		// CONTROLAR $? PARA DEVOLVER EL ESTADO CORRECTO!!!!!!!!!!
 		if (!is_valid_quote(cmd, minishell))
 		{
 			return ;
@@ -111,7 +110,7 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 						// else
 						// 	write(1, "", 1);// if variable not found print empty string
 						// pos += variable;
-						expand_variable(cmd, idx, &pos, minishell);
+						print_expand_variable(cmd, idx, &pos, minishell);
 						continue ;
 						// EXPAND ENVIRONMENT VARIABLES
 					}
@@ -300,20 +299,21 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 			minishell->status = 1;
 			return ;
 		}
-		set_env_value(minishell, "OLDPWD", get_env_value(minishell, "PWD"));
-		set_env_value(minishell, "PWD", getcwd(NULL, 0));
+		set_env_value(minishell, "OLDPWD", get_env_value(minishell, "PWD"), 1);
+		set_env_value(minishell, "PWD", getcwd(NULL, 0), 1);
 		free(move);
 		minishell->status = 0;
 	}
 	else if (ft_strstr(ecmd->argv[0], "env"))
 	{
 		int i = 0;
-		while (minishell->env[i])
+		while (minishell->env[i] && minishell->exported[i])
 		{
 			write(1, minishell->env[i], ft_strlen(minishell->env[i]));
 			write(1, "\n", 1);
 			i++;
 		}
+		minishell->status = 0;
 	}
 	else if (ft_strstr(ecmd->argv[0], "exit"))
 	{
@@ -324,21 +324,224 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 	}
 	else if (ft_strstr(ecmd->argv[0], "export"))
 	{
-		// TODO Valid no options
-
-		// Valid not arguments
-		if (!ecmd->eargv[1])
+		idx = 1;
+		
+		if (!ecmd->argv[idx])
 		{
-			//TODO print all environment variables sorted
-			minishell->status = 0;
+			// print all environment variables sorted
+			printf("declare -x \n");
 		}
+		while (ecmd->argv[idx])
+		{
+			// valid if quote is valid
+			if (!is_valid_quote(cmd, minishell))
+				return ;
+			ecmd->argv[idx] = expand_variables(ecmd->argv[idx], minishell);
+			print_vector(ecmd->argv);
+			// remove quotes if exists
+			remove_quotes(ecmd, idx);
+			
+			// check if value is valid
+			int s = -1;
+			char **q;
+			char *arge[3];
+			int argc = 0;
+			*q = ecmd->argv[idx];
+			int exported = 0;
+			while (ecmd->argv[idx][++s])
+			{
+				if (s == 0 && ft_isalpha(ecmd->argv[idx][s]) || ecmd->argv[idx][s] == '_')
+				{
+					if (ecmd->argv[idx][s + 1])
+						continue ;
+				}
+				else if (s != 0 && ft_isalnum(ecmd->argv[idx][s]) || ecmd->argv[idx][s] == '_')
+				{
+					if (ecmd->argv[idx][s + 1])
+						continue ;
+				}
+				else
+				{
+					if (s != 0 && ecmd->argv[idx][s] == '=')
+					{
+						ecmd->argv[idx][s] = 0;
+						arge[argc++] = *q;
+						*q = *q + s + 1;
+						exported = 1;
+						while (ecmd->argv[idx][++s])
+							;					
+						if (!ecmd->argv[idx][s + 1])
+							arge[argc++] = *q;
+						break ;
+					}
+					// print error if variable is not valid
+					printf("export: `%s': not a valid identifier\n", ecmd->argv[idx]);
+					minishell->status = 1;
+					return ;
+				}
+				
+			}
+			arge[argc] = 0;
+
+			// check if variable already exists
+			if (env_exists(minishell, arge[0]))
+			{
+				//update variable if already exists
+				set_env_value(minishell, arge[0], arge[1], exported);
+			}
+			else
+			{
+				//add variable to environment
+				create_env_value(minishell, arge[0], arge[1], exported);
+			}
+			idx++;	
+		}
+		
+		minishell->status = 0;
 	}
+	// else if (ft_strstr(ecmd->argv[0], "1export"))
+	// {
+	// 	// TODO Valid no options
+
+	// 	// Valid not arguments
+	// 	if (!ecmd->eargv[1])
+	// 	{
+	// 		//TODO print all environment variables sorted
+	// 		minishell->status = 0;
+	// 	}
+
+	// 	//TODO handle multiple arguments
+
+	// 	int idx = 1;
+	// 	char *s;
+	// 	char *es;
+
+	// 	char **eq;
+	// 	char **q;
+	// 	int expand = 0;
+
+	// 	while (ecmd->argv[idx])
+	// 	{
+	// 		expand = 0;
+	// 		s = ecmd->argv[idx];
+	// 		es = s + ft_strlen(ecmd->argv[idx]);
+
+	// 		if (*s == '$')
+	// 		{
+	// 			expand = 1;
+	// 			s++;
+	// 		}
+	// 		*q = s;
+	// 		//valid if the first character is a number
+	// 		if (!isalpha(*s) && *s != '_')
+	// 		{
+	// 			//TODO print error
+	// 			printf("export: `%s': not a valid identifier\n", ecmd->argv[idx]);
+	// 			minishell->status = 1;
+	// 			return ;
+	// 		}
+	// 		while(s < es && *s != '=')
+	// 			s++;
+	// 		if (s == es && *s) //valid if there is a '=' //mark there is no value, possible not necessary
+	// 		{
+	// 			//TODO print error
+	// 			printf("export: `%s': not a valid identifier\n", ecmd->argv[idx]);
+	// 			minishell->status = 1;
+	// 			return ;
+	// 		}
+	// 		//valid i there is a valid value
+	// 		*eq = s;
+	// 		**eq = 0; //change pointer of the last value '=' to 0
+
+	// 		char *var;
+	// 		var = *q;
+	// 		char *tmp;
+	// 		// TODO expand variable
+	// 		//TODO check if variable is valid
+	// 		if (expand)
+	// 		{
+	// 			if (env_exists(minishell, var))
+	// 			{
+	// 				tmp = get_env_value(minishell, var);
+	// 				var = tmp;
+	// 			}
+	// 			else
+	// 			{
+	// 				//TODO print error
+	// 				printf("export: `%s': not a valid identifier\n", ecmd->argv[idx]);
+	// 				minishell->status = 1;
+	// 				return ;
+	// 			}
+	// 		}
+
+	// 		expand = 0;
+	// 		// move next to =
+	// 		s++;
+
+	// 		if (*s == '$')
+	// 		{
+	// 			expand = 1;
+	// 			s++;
+	// 		}
+
+	// 		char *value;
+	// 		if (*s)
+	// 		{
+	// 			*q = s;
+	// 			while(s < es)
+	// 				s++;
+	// 			*eq = s;
+	// 			value = *q;
+	// 		}
+	// 		else
+	// 		{
+	// 			value = 0;
+	// 		}
+	// 		// TODO expand variable
+	// 		//TODO check if variable is valid
+	// 		if (expand && value)
+	// 		{
+	// 			if (env_exists(minishell, value))
+	// 			{
+	// 				tmp = get_env_value(minishell, value);
+	// 				value = tmp;
+	// 			}
+	// 			else
+	// 			{
+	// 				//TODO print error
+	// 				printf("export: `%s': not a valid identifier\n", ecmd->argv[idx]);
+	// 				minishell->status = 1;
+	// 				return ;
+	// 			}
+	// 		}
+			
+	// 		//check if variable already exists
+	// 		if (env_exists(minishell, var))
+	// 		{
+	// 			//update variable if already exists
+	// 			set_env_value(minishell, var, value);
+	// 		}
+	// 		else
+	// 		{
+	// 			//add variable to environment
+	// 			create_env_value(minishell, var, value);
+	// 		}
+	// 		idx++;
+	// 	}
+		
+	// 	// TODO handle quotes
+
+	// 	// _TMP=123
+	// 	// name only letters and _
+	// 	// value only letters and numbers
+	// }
 	else if (ft_strstr(ecmd->argv[0], "unset"))
 	{
 		// TODO Valid no options
 		
 		exit(minishell->status);
 	}
+	// free all variables from ecmd
 }
 
 void run_external(t_cmd *cmd, t_minishell *minishell)

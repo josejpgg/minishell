@@ -8,7 +8,7 @@ FLAGS =
 SOURCE := main.c env.c param.c \
 safe_func.c interactive.c safe_free.c str_util.c \
 command.c line.c pipe.c redirection.c token.c \
-cmd_controller.c cmd_impl.c vector.c cmd_util.c
+cmd_controller.c cmd_impl.c vector.c cmd_util.c builtin_impl.c
 # READLINE := -lreadline -lncurses
 READLINE := -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline
 # READLINE := -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline

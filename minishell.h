@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/20 22:50:50 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/08 22:12:55 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,17 @@ typedef enum e_type
 	EXIT,
 }	t_type;
 
+// typedef struct env
+// {
+// 	char	*value;
+// 	bool	exported;
+// }	t_env;
+
 typedef struct minishell
 {
 	char	**path_env;
 	char	**env;
+	int 	*exported;
 	int		status; // last command status
 }	t_minishell;
 
@@ -120,7 +127,9 @@ typedef struct s_response
 // env
 void		init_env(t_minishell *minishell, char **envp);
 char *get_env_value(t_minishell *minishell, char *key);
-void set_env_value(t_minishell *minishell, char *key, char *value);
+void set_env_value(t_minishell *minishell, char *key, char *value, int exported);
+void create_env_value(t_minishell *minishell, char *key, char *value, int exported);
+int env_exists(t_minishell *minishell, char *key);
 
 //params
 void	valid_inital_param(int argc, char **envp, t_minishell *minishell);
@@ -152,6 +161,7 @@ bool valid_quotes(char *input, char quote);
 // token.c
 int	gettoken(char **ps, char *es, char **q, char **eq);
 int	peek(char **ps, char *es, char *toks);
+int	gettoken_bi(char **ps, char *es, char **q, char **eq);
 
 // command.c
 struct cmd* execcmd();
@@ -185,7 +195,7 @@ void run_internal(t_cmd *cmd, t_minishell *minishell);
 void run_external(t_cmd *cmd, t_minishell *minishell);
 
 // cmd_util.c
-void expand_variable(t_cmd *cmd, int idx, int *pos, t_minishell *minishell);
+void print_expand_variable(t_cmd *cmd, int idx, int *pos, t_minishell *minishell);
 int is_valid_quote(t_cmd *cmd, t_minishell *minishell);
 char *getenv_minishell(t_minishell *minishell, char *key);
 
@@ -198,6 +208,16 @@ void	ft_vector_remove_last_element(char **argv);
 void	ft_vector_trim(char **argv);
 void replace_element_index(char **split, int index, char *tmp);
 char	**add_next_index_element(char **split, int index, char *tmp);
+
+// builtin_impl.c
+char *expand_variables(char *arg, t_minishell *minishell);
+void remove_quotes(t_execcmd *ecmd, int idx);
+
+
+
+
+
+
 
 void	print_vector(char **vector);
 
