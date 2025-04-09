@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 17:09:29 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/08 22:14:36 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/09 22:15:06 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,4 +147,25 @@ int env_exists(t_minishell *minishell, char *key)
 		i++;
 	}
 	return (0);
+}
+
+void remove_env_value(t_minishell *minishell, char *key)
+{
+	int i = 0;
+	while (minishell->env[i])
+	{
+		if (ft_strncmp(minishell->env[i], key, ft_strlen(key)) == 0)
+			if (minishell->env[i][ft_strlen(key)] == '=')
+			{
+				free(minishell->env[i]);
+				while (minishell->env[i + 1])
+				{
+					minishell->env[i] = minishell->env[i + 1];
+					i++;
+				}
+				minishell->env[i] = NULL;
+				break ;
+			}
+		i++;
+	}
 }

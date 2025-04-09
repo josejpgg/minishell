@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/08 22:12:55 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/09 22:15:56 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,7 @@ char *get_env_value(t_minishell *minishell, char *key);
 void set_env_value(t_minishell *minishell, char *key, char *value, int exported);
 void create_env_value(t_minishell *minishell, char *key, char *value, int exported);
 int env_exists(t_minishell *minishell, char *key);
+void remove_env_value(t_minishell *minishell, char *key);
 
 //params
 void	valid_inital_param(int argc, char **envp, t_minishell *minishell);
