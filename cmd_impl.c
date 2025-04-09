@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:45:13 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/09 22:38:10 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/09 23:00:44 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -317,10 +317,34 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 	}
 	else if (ft_strstr(ecmd->argv[0], "exit"))
 	{
-		// TODO Valid no options
-		
-		// in case of error exit should return the last command status
-		exit(minishell->status);
+		if (!ecmd->argv[2])
+		{
+			idx = 0;
+			// exit with a specific value
+			if (ecmd->argv[1])
+			{
+				printf("exit\n");
+				minishell->status = ft_atoi(ecmd->argv[1]) % 256;
+				while (ecmd->argv[1][idx])
+				{
+					if (!ft_isdigit(ecmd->argv[1][idx]))
+					{
+						printf("exit: numeric argument required\n");
+						minishell->status = 255;
+						break ;
+					}
+					idx++;
+				}
+			}
+			// exit with last state of the program
+			exit(minishell->status);
+		}
+		else
+		{
+			printf("exit: too many arguments\n");
+			minishell->status = 1;
+			// return ;
+		}
 	}
 	else if (ft_strstr(ecmd->argv[0], "export"))
 	{
