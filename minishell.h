@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/09 22:15:56 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/23 22:31:20 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,21 @@ typedef enum e_type
 // 	bool	exported;
 // }	t_env;
 
+typedef struct s_history
+{
+    char **entries;
+    int count;
+    int capacity;
+} t_history;
+
 typedef struct minishell
 {
 	char	**path_env;
 	char	**env;
 	int 	*exported;
 	int		status; // last command status
+	t_history *history;
+	int     history_disabled;
 }	t_minishell;
 
 typedef struct echocmd
@@ -96,6 +105,7 @@ typedef struct redircmd
 	int mode;
 	mode_t right;
 	int fd;
+	char	*hdoc;
 }	t_redircmd;
 
 typedef enum e_response_msg
@@ -145,9 +155,9 @@ void safe_pipe(int *pipefd);
 
 // interactive
 void	catch_signal(void);
-void	catch_interactive(char *input, char *prompt);
 void	save_history(char *input);
 char	*check_input_valid(char *input);
+void	catch_interactive(t_minishell *minishell, char *input, char *prompt);
 
 // safe_free.c
 void	safe_free_vector(char **split);
@@ -162,7 +172,6 @@ bool valid_quotes(char *input, char quote);
 // token.c
 int	gettoken(char **ps, char *es, char **q, char **eq);
 int	peek(char **ps, char *es, char *toks);
-int	gettoken_bi(char **ps, char *es, char **q, char **eq);
 
 // command.c
 struct cmd* execcmd();
@@ -214,7 +223,17 @@ char	**add_next_index_element(char **split, int index, char *tmp);
 char *expand_variables(char *arg, t_minishell *minishell);
 void remove_quotes(t_execcmd *ecmd, int idx);
 
+// history.c
+t_history *history_create(void);
+void history_add(t_history *hist, const char *entry);
+static char *construct_history_path(const char *histfile_name);
+void load_history_file(t_history *hist, const char *histfile_name);
+void save_history_file(t_history *hist, const char *histfile_name, int max_entries);
 
+//history2.c
+void history_print(t_history *hist, const char *option);
+void history_clear(t_history *hist);
+void history_free(t_history *hist);
 
 
 
