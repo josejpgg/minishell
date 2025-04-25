@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:29:04 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/23 22:32:12 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/25 20:17:10 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char *process_heredoc(char *q, char *eq) {
     char delimiter[eq - q + 1];
     strncpy(delimiter, q, eq - q);
     delimiter[eq - q] = '\0';
-    printf("HEREDOC START: Delimiter is '%s'\n", delimiter);
+    // printf("HEREDOC START: Delimiter is '%s'\n", delimiter);
     heredoc = malloc(1);
     if (!heredoc)
         panic("Memory allocation failed");
@@ -48,32 +48,37 @@ char *process_heredoc(char *q, char *eq) {
         strcat(heredoc, line);
     }
     free(line);
-    printf("%s", heredoc);
+    // printf("%s", heredoc);
     return heredoc;
 }
 
-struct cmd* parseredirs(struct cmd *cmd, char **ps, char *es)
-{
-  int tok;
-  char *q, *eq;
-
-  while(peek(ps, es, "<>")){
-    tok = gettoken(ps, es, 0, 0);
-    if(gettoken(ps, es, &q, &eq) != 'a')
-      panic("missing file for redirection");
-    switch(tok){
-    case '<':
-      cmd = redircmd(cmd, q, eq, O_RDONLY, 0, 0);
-      break;
-    case '>':
-      cmd = redircmd(cmd, q, eq, O_CREAT|O_WRONLY|O_TRUNC, 0644, 1);
-      break;
-    case '+':  // >>
-      cmd = redircmd(cmd, q, eq, O_CREAT|O_WRONLY|O_APPEND, 0644, 1);
-      break;
-    // << heredoc to -
+struct cmd* parseredirs(struct cmd *cmd, char **ps, char *es) {
+    int tok;
+    char *q, *eq;
+    char *hdoc = NULL;
+    while (peek(ps, es, "<>")) {
+        tok = gettoken(ps, es, &q, &eq);
+        if (tok == HDOC) {
+            if (gettoken(ps, es, &q, &eq) != 'a')
+                panic("missing delimiter for heredoc");
+            hdoc = process_heredoc(q, eq);
+            cmd = redircmd(cmd, NULL, NULL, 0, 0, 0, hdoc);
+        } else {
+            if (gettoken(ps, es, &q, &eq) != 'a')
+                panic("missing file for redirection");
+            switch (tok) {
+                case '<':
+                    cmd = redircmd(cmd, q, eq, O_RDONLY, 0, 0, NULL);
+                    break;
+                case '>':
+                    cmd = redircmd(cmd, q, eq, O_CREAT | O_WRONLY | O_TRUNC, 0644, 1, NULL);
+                    break;
+                case '+':  // >>
+                    cmd = redircmd(cmd, q, eq, O_CREAT | O_WRONLY | O_APPEND, 0644, 1, NULL);
+                    break;
+            }
+        }
     }
-  }
-  return cmd;
+    return cmd;
 }
 

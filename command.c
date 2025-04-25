@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:27:25 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/16 18:22:41 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/25 20:26:40 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ struct cmd *parseexec(char **ps, char *es)
   cmd = (struct execcmd *)ret;
 
   argc = 0;
-//   ret = parseredirs(ret, ps, es); JGG IS OK REMOVE?
-//   while (!peek(ps, es, "|)&;"))
+  ret = parseredirs(ret, ps, es);
+
   while (!peek(ps, es, "|"))
   { // loop character by character
     if ((tok = gettoken(ps, es, &q, &eq)) == 0)
@@ -109,8 +109,37 @@ struct cmd *parsecmd(char *s)
     ft_putchar_fd('\n', 2);
     panic("syntax");
   }
+  
   nulterminate(cmd);
   return cmd;
+}
+
+char *read_stdin_to_str(void)
+{
+	char buffer[1024];
+	char *result = malloc(1);
+	ssize_t bytes_read;
+	size_t total = 0;
+
+	if (!result)
+		return (NULL);
+	result[0] = '\0';
+
+	while ((bytes_read = read(STDIN_FILENO, buffer, sizeof(buffer))) > 0)
+	{
+		char *tmp = malloc(total + bytes_read + 1);
+		if (!tmp)
+			return (NULL);
+		for (size_t i = 0; i < total; i++)
+			tmp[i] = result[i];
+		for (ssize_t j = 0; j < bytes_read; j++)
+			tmp[total + j] = buffer[j];
+		tmp[total + bytes_read] = '\0';
+		free(result);
+		result = tmp;
+		total += bytes_read;
+	}
+	return result;
 }
 
 // Execute cmd.  Never returns.
@@ -134,18 +163,25 @@ void runcmd(struct cmd *cmd, t_minishell *minishell)
 
   case EXEC:
     ecmd = (struct execcmd *)cmd;
-    valid_command(ecmd, minishell);
-	print_vector(ecmd->argv);
+	  print_vector(ecmd->argv);
     if (ecmd->argv[0] == 0)
       exit(0);
 	if (valid_builtins(cmd))
 	{
-		// cmd = prepare_builtins(cmd, minishell);
+    // printf("check this\n");
+    // char *tmp = read_stdin_to_str();
+    // if (tmp)
+    // {
+    //   ecmd->argv[1] = tmp;
+    //   ecmd->argv[2] = 0;
+    //   // free(tmp);
+    // }
 		run_internal(cmd, minishell);
 	}
 	else
 	{
-	    exec_command(ecmd->argv[0], ecmd->argv);
+    valid_command(ecmd, minishell);
+    exec_command(ecmd->argv[0], ecmd->argv);
 		ft_putstr_fd("exec failed ", 2);
 		ft_putstr_fd(ecmd->argv[0], 2);
 		ft_putchar_fd('\n', 2);
@@ -154,30 +190,85 @@ void runcmd(struct cmd *cmd, t_minishell *minishell)
 
   case REDIR:
     rcmd = (struct redircmd *)cmd;
-    close(rcmd->fd);
-	if (rcmd->mode == O_RDONLY)
-	{
-		if (open(rcmd->file, rcmd->mode) < 0)
-		{
-			ft_putstr_fd("open failed ", 2);
-			ft_putstr_fd(rcmd->file, 2);
-			ft_putchar_fd('\n', 2);
-			exit(1);
-		}
-	}
-	else
-	{
-		if (open(rcmd->file, rcmd->mode, rcmd->right) < 0)
-		{
-			ft_putstr_fd("open failed ", 2);
-			ft_putstr_fd(rcmd->file, 2);
-			ft_putchar_fd('\n', 2);
-			exit(1);
-		}
-	}
+    // if (rcmd->hdoc) {
+    //     int pipefd[2];
+    //     if (pipe(pipefd) < 0)
+    //         panic("pipe error");
+    //     if (fork1() == 0) {
+    //         close(pipefd[0]);
+    //         char *line = NULL;
+    //         while ((line = get_next_line(STDIN_FILENO))) {
+    //           printf("test!\n");
+    //             size_t length = ft_strlen(line);
+    //             if (length > 0 && line[length - 1] == '\n')
+    //                 line[length - 1] = '\0';
+    //             if (strcmp(line, rcmd->hdoc) == 0) {
+    //                 free(line);
+    //                 break;
+    //             }
+    //             write(pipefd[1], line, ft_strlen(line));
+    //             write(pipefd[1], "\n", 1);
+    //             free(line);
+    //         }
+    //         close(pipefd[1]);
+    //         exit(0);
+    //     }
+    //     close(pipefd[1]);
+    //     dup2(pipefd[0], STDIN_FILENO);
+    //     close(pipefd[0]);
+    // }
+    if (rcmd->hdoc) {
+        int pipefd[2];
+        if (pipe(pipefd) < 0)
+            panic("pipe error");
+        // write heredoc content to pipe
+        write(pipefd[1], rcmd->hdoc, ft_strlen(rcmd->hdoc));
+        close(pipefd[1]);
+
+        // redirect stdin
+        dup2(pipefd[0], STDIN_FILENO);
+        close(pipefd[0]);
+        free(rcmd->hdoc);
+
+        // ecmd = (struct execcmd *)cmd;
+        // ecmd->argv[1] = rcmd->hdoc;
+        // ecmd->argv[2] = 0;
+        
+    }
+     else {
+        int fd;
+        if (rcmd->mode == O_RDONLY) {
+          printf("test <\n");
+            fd = open(rcmd->file, O_RDONLY);
+            if (fd < 0) {
+                perror("open redirection failed");
+                exit(1);
+            }
+            dup2(fd, STDIN_FILENO);
+            close(fd);
+        } else if (rcmd->mode == (O_WRONLY | O_CREAT | O_TRUNC)) {
+            fd = open(rcmd->file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            if (fd < 0) {
+                perror("open redirection failed");
+                exit(1);
+            }
+            dup2(fd, STDOUT_FILENO);
+            close(fd);
+        } else if (rcmd->mode == (O_WRONLY | O_CREAT | O_APPEND)) {
+            fd = open(rcmd->file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+            if (fd < 0) {
+                perror("open redirection failed");
+                exit(1);
+            }
+            dup2(fd, STDOUT_FILENO);
+            close(fd);
+        } else {
+            perror("unknown redirection mode");
+            exit(1);
+        }
+    }
     runcmd(rcmd->cmd, minishell);
     break;
-	
   case PIPE:
     pcmd = (struct pipecmd *)cmd;
     if (pipe(p) < 0)

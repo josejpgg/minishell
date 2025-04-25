@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/23 22:31:20 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/23 22:39:00 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ void control_cmd(t_cmd *cmd, t_minishell *minishell);
 
 // redirection.c
 // struct cmd* redircmd(struct cmd *subcmd, char *file, char *efile, int mode, mode_t right, int fd);
-struct cmd* redircmd(struct cmd *subcmd, char *file, char *efile, int mode, mode_t right, int fd);
+struct cmd* redircmd(struct cmd *subcmd, char *file, char *efile, int mode, mode_t right, int fd, char *hdoc);
 // struct cmd* parseredirs(struct cmd *cmd, char **ps, char *es);
 struct cmd* parseredirs(struct cmd *cmd, char **ps, char *es);
 
