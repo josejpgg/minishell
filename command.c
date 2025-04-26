@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:27:25 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/25 20:26:40 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/26 17:02:14 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,6 @@ void runcmd(struct cmd *cmd, t_minishell *minishell)
 
   case EXEC:
     ecmd = (struct execcmd *)cmd;
-	  print_vector(ecmd->argv);
     if (ecmd->argv[0] == 0)
       exit(0);
 	if (valid_builtins(cmd))
@@ -238,7 +237,6 @@ void runcmd(struct cmd *cmd, t_minishell *minishell)
      else {
         int fd;
         if (rcmd->mode == O_RDONLY) {
-          printf("test <\n");
             fd = open(rcmd->file, O_RDONLY);
             if (fd < 0) {
                 perror("open redirection failed");

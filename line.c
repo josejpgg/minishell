@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:35:25 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/25 19:02:31 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/26 19:46:07 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,9 @@ struct cmd* nulterminate(struct cmd *cmd)
   if(cmd == 0)
     return 0;
   
-  printf("1_cmd->type = %d\n", cmd->type);
   switch(cmd->type){
   case EXEC:
     ecmd = (struct execcmd*)cmd;
-    print_vector(ecmd->argv);
-    print_vector(ecmd->eargv);
     for(i=0; ecmd->argv[i]; i++)
     {
       *ecmd->eargv[i] = 0;

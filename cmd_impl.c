@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:45:13 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/24 21:26:39 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/26 19:45:23 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 	int pos;
 	
 	ecmd = (t_execcmd *)cmd;
-	print_vector(ecmd->argv);
+	// print_vector(ecmd->argv);
 	char quote=0;
 	if (ft_strstr(ecmd->argv[0], "echo"))
 	{
