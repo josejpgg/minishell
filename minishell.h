@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/23 22:39:00 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/26 20:06:05 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,6 +222,7 @@ char	**add_next_index_element(char **split, int index, char *tmp);
 // builtin_impl.c
 char *expand_variables(char *arg, t_minishell *minishell);
 void remove_quotes(t_execcmd *ecmd, int idx);
+char *remove_quotes_simple(char *str);
 
 // history.c
 t_history *history_create(void);

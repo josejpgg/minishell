@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:29:04 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/25 20:17:10 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/26 20:24:09 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ struct cmd* redircmd(struct cmd *subcmd, char *file, char *efile, int mode, mode
     return (struct cmd*)cmd;
 }
 
-
 char *process_heredoc(char *q, char *eq) {
     char *heredoc = NULL;
     char *line = NULL;
@@ -36,21 +35,55 @@ char *process_heredoc(char *q, char *eq) {
     char delimiter[eq - q + 1];
     strncpy(delimiter, q, eq - q);
     delimiter[eq - q] = '\0';
-    // printf("HEREDOC START: Delimiter is '%s'\n", delimiter);
+    char *str_delimiter = ft_strdup(delimiter);
+    str_delimiter = remove_quotes_simple(str_delimiter);
     heredoc = malloc(1);
     if (!heredoc)
         panic("Memory allocation failed");
     *heredoc = '\0';
-    while ((nread = getline(&line, &len, input)) != -1) {
-        if (strncmp(line, delimiter, strlen(delimiter)) == 0 && line[strlen(delimiter)] == '\n')
-            break;
-        heredoc = realloc(heredoc, strlen(heredoc) + nread + 1);
+    while (1)
+    {
+        line = readline("> ");
+        if (line == NULL)
+            break ;
+        line = realloc(line, strlen(line) + 2); // Allocate space for '\n' and '\0'
+        strcat(line, "\n"); // Append newline character
+        if (strncmp(line, str_delimiter, strlen(str_delimiter)) == 0 && line[strlen(str_delimiter)] == '\n')
+            break ;
+        heredoc = realloc(heredoc, strlen(heredoc) + strlen(line) + 1);
         strcat(heredoc, line);
+        free(line);
     }
     free(line);
-    // printf("%s", heredoc);
     return heredoc;
 }
+
+// char *process_heredoc(char *q, char *eq) {
+//     char *heredoc = NULL;
+//     char *line = NULL;
+//     size_t len = 0;
+//     ssize_t nread;
+//     FILE *input = stdin;
+//     char delimiter[eq - q + 1];
+//     strncpy(delimiter, q, eq - q);
+//     delimiter[eq - q] = '\0';
+//     char *str_delimiter = ft_strdup(delimiter);
+//     str_delimiter = remove_quotes_simple(str_delimiter);
+//     // printf("HEREDOC START: Delimiter is '%s'\n", delimiter);
+//     heredoc = malloc(1);
+//     if (!heredoc)
+//         panic("Memory allocation failed");
+//     *heredoc = '\0';
+//     while ((nread = getline(&line, &len, input)) != -1) {
+//         if (strncmp(line, str_delimiter, strlen(str_delimiter)) == 0 && line[strlen(str_delimiter)] == '\n')
+//             break;
+//         heredoc = realloc(heredoc, strlen(heredoc) + nread + 1);
+//         strcat(heredoc, line);
+//     }
+//     free(line);
+//     // printf("%s", heredoc);
+//     return heredoc;
+// }
 
 struct cmd* parseredirs(struct cmd *cmd, char **ps, char *es) {
     int tok;

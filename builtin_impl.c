@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 16:49:52 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/04 22:39:25 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/26 20:07:14 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,4 +226,28 @@ void remove_quotes(t_execcmd *ecmd, int idx)
 	}
 	free(ecmd->argv[idx]);
 	ecmd->argv[idx] = result;
+}
+
+char *remove_quotes_simple(char *str)
+{
+	char *result;
+	char tmp[2];
+	char *tmp_result;
+
+	result= ft_strdup("");
+	tmp[1] = '\0';
+	while (*str)
+	{
+		if (*str != '\'' && *str != '\"')
+		{
+			tmp[0] = *str;
+			tmp_result = ft_strjoin(result, tmp);
+			free(result);
+			result = ft_strdup(tmp_result);
+			free(tmp_result);
+		}
+		str++;
+	}
+	// free(str);
+	return result;
 }
