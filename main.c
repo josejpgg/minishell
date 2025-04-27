@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 22:34:17 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/27 13:53:26 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/27 14:26:53 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	main(int argc, char **argv, char **envp)
 	minishell.history = history_create();
     load_history_file(minishell.history, ".minishell_history");
 	// history
-
+	disable_echoctl();
 	catch_signal();
 	while (1)
 	{

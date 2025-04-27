@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/26 20:06:05 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/27 14:27:30 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 # include <readline/history.h>
 # include <errno.h>
 # include <signal.h>
+# include <termios.h>
+
 // LINUX
 // # include <linux/limits.h> 
 // MAC
@@ -36,7 +38,7 @@ typedef enum e_type
 	REDIR,
 	PIPE,
 	HDOC,
-	ECHO,
+	ECHOS,
 	CD,
 	PWD,
 	EXPORT,
@@ -158,6 +160,7 @@ void	catch_signal(void);
 void	save_history(char *input);
 char	*check_input_valid(char *input);
 void	catch_interactive(t_minishell *minishell, char *input, char *prompt);
+void disable_echoctl(void);
 
 // safe_free.c
 void	safe_free_vector(char **split);

@@ -6,11 +6,28 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:28:48 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/27 14:08:21 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/27 14:26:26 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void disable_echoctl(void)
+{
+	struct termios term;
+
+	if (tcgetattr(STDIN_FILENO, &term) == -1)
+	{
+		perror("tcgetattr");
+		exit(EXIT_FAILURE);
+	}
+	term.c_lflag &= ~ECHOCTL;
+	if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1)
+	{
+		perror("tcsetattr");
+		exit(EXIT_FAILURE);
+	}
+}
 
 /*
 * catch control-c and print value ^C in each line.
@@ -22,6 +39,7 @@ static void	sigint_handler(int signal)
 	rl_on_new_line();
 	printf("\n");
 	rl_redisplay();
+
 }
 
 /*
