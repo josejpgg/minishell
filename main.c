@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 22:34:17 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/24 22:00:40 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/27 13:53:26 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	main(int argc, char **argv, char **envp)
 		// ONLY VALID FOR TESTER
 		
 		// catch_interactive(input, PROMPT); DO NOT REMOVE
-		catch_interactive(&minishell, input, "minishell$"); // ctrl + d not works
+		catch_interactive(&minishell, input, "minishell$"); // ctrl + d
 		
 		input = check_input_valid(input);
 		if (input[0] == '\0')

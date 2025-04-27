@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:39:59 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/16 16:55:06 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/27 13:55:04 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ int valid_builtins(t_cmd *cmd)
 	t_execcmd *ecmd;
 	ecmd = (t_execcmd *)cmd;
 	
-	return (ft_strstr(ecmd->argv[0], "echo")||
-			ft_strstr(ecmd->argv[0], "cd")||
-			ft_strstr(ecmd->argv[0], "pwd")||
-			ft_strstr(ecmd->argv[0], "export")||
-			ft_strstr(ecmd->argv[0], "unset")||
-			ft_strstr(ecmd->argv[0], "env")||
-			ft_strstr(ecmd->argv[0], "exit"));
+	return (ft_strcmp(ecmd->argv[0], "echo") == 0 ||
+			ft_strcmp(ecmd->argv[0], "cd") == 0 ||
+			ft_strcmp(ecmd->argv[0], "pwd") == 0 ||
+			ft_strcmp(ecmd->argv[0], "export") == 0 ||
+			ft_strcmp(ecmd->argv[0], "unset") == 0 ||
+			ft_strcmp(ecmd->argv[0], "env") == 0 ||
+			ft_strcmp(ecmd->argv[0], "exit") == 0);
 }
 
 t_cmd *prepare_builtins(t_cmd *cmd, t_minishell *minishell)

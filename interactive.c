@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 12:28:48 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/21 21:15:31 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/27 14:08:21 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,10 @@ void	catch_interactive(t_minishell *minishell, char *input, char *prompt)
 {
 	if (!input)
 	{
-		input = ft_strdup("exit");
-	}
-	if (ft_strcmp(input, "exit") == 0)
-	{
 		free (input);
 		printf("\033[1A");
 		printf("\033[%zuC", ft_strlen(prompt));
-		printf("exit\n");
+		printf(" exit\n");
 		// history
 		save_history_file(minishell->history, ".minishell_history", 1000);
 		history_free(minishell->history);  // Se aplica acá también.
@@ -57,6 +53,25 @@ void	catch_interactive(t_minishell *minishell, char *input, char *prompt)
 		exit(0);
 	}
 }
+// void	catch_interactive(t_minishell *minishell, char *input, char *prompt)
+// {
+// 	if (!input)
+// 	{
+// 		input = ft_strdup("exit");
+// 	}
+// 	if (ft_strcmp(input, "exit") == 0)
+// 	{
+// 		free (input);
+// 		printf("\033[1A");
+// 		printf("\033[%zuC", ft_strlen(prompt));
+// 		printf(" exit\n");
+// 		// history
+// 		save_history_file(minishell->history, ".minishell_history", 1000);
+// 		history_free(minishell->history);  // Se aplica acá también.
+// 		// history
+// 		exit(0);
+// 	}
+// }
 
 /*
 * save input to history filtering empty lines

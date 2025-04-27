@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:45:13 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/26 19:45:23 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/27 14:12:41 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -323,7 +323,6 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 			// exit with a specific value
 			if (ecmd->argv[1])
 			{
-				printf("exit\n");
 				minishell->status = ft_atoi(ecmd->argv[1]) % 256;
 				while (ecmd->argv[1][idx])
 				{
@@ -336,6 +335,7 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 					idx++;
 				}
 			}
+			printf("exit\n");
 			// exit with last state of the program
 			exit(minishell->status);
 		}
