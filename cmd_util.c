@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 22:35:51 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/04 22:26:35 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/01 17:38:37 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void print_expand_variable(t_cmd *cmd, int idx, int *pos, t_minishell *minishell
 	*pos += extend;
 }
 
-int is_valid_quote(t_cmd *cmd, t_minishell *minishell)
+int is_valid_quote2(t_cmd *cmd, t_minishell *minishell)
 {
 	char quote;
 	int idx;

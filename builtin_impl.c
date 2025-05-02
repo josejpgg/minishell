@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 16:49:52 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/26 20:07:14 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/02 14:39:06 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,7 +162,7 @@ char *expand_variables(char *arg, t_minishell *minishell)
 				s++;
 				continue ;
 			}
-			else if (*(s + 1) == '_' || ft_isalpha(*(s + 1)))
+			else if (*(s) == '_' || ft_isalpha(*(s)))
 			{
 				while (*s && (*s == '_' || ft_isalnum(*s)))
 				{
@@ -177,6 +177,22 @@ char *expand_variables(char *arg, t_minishell *minishell)
 				free(var_name);
 				continue ;
 			}
+			// else if (*(s + 1) == '_' || ft_isalpha(*(s + 1)))
+			// {
+			// 	while (*s && (*s == '_' || ft_isalnum(*s)))
+			// 	{
+			// 		tmp[0] = *s;
+			// 		var_name = ft_strjoin(var_name, tmp);
+			// 		s++;
+			// 	}
+			// 	tmp_result = ft_strjoin(result, getenv_minishell(minishell, var_name));
+			// 	free(result);
+			// 	result = ft_strdup(tmp_result);
+			// 	free(tmp_result);
+			// 	free(var_name);
+			// 	continue ;
+			// }
+			s++;
 		}
 		tmp[0] = *s;
 		tmp_result = ft_strjoin(result, tmp);

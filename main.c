@@ -6,11 +6,16 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 22:34:17 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/27 14:26:53 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/29 22:52:55 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void check_leaks(void)
+{
+    system("leaks minishell");
+}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -25,7 +30,10 @@ int	main(int argc, char **argv, char **envp)
 	minishell.history = history_create();
     load_history_file(minishell.history, ".minishell_history");
 	// history
+
+	//  DISABLE FOR TESTER
 	disable_echoctl();
+	//  DISABLE FOR TESTER
 	catch_signal();
 	while (1)
 	{
@@ -43,10 +51,10 @@ int	main(int argc, char **argv, char **envp)
 			free(line);
 		}
 		// ONLY VALID FOR TESTER
-		
+
 		// catch_interactive(input, PROMPT); DO NOT REMOVE
 		catch_interactive(&minishell, input, "minishell$"); // ctrl + d
-		
+
 		input = check_input_valid(input);
 		if (input[0] == '\0')
 		{
@@ -54,7 +62,7 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		}
 
-		
+
 		// history
 		// Si la entrada no es vacía, la agregamos al historial siempre y cuando
         // no se trate de un comando de historial, para evitar contaminarlo.
@@ -80,15 +88,20 @@ int	main(int argc, char **argv, char **envp)
 		}
 		// history
 
-		
+
 		// catch_interactive(&minishell, input, "minishell$"); // ctrl + d not works
-
-
+		// char *test = malloc(1000);
 		// pgm opt1 opt2 < file1 > file2
+		// atexit(check_leaks);
+		// exit(0);
 		cmd = parsecmd(input);
 		control_cmd(cmd, &minishell);
 		free(input);
+		// safe_free_minishell(&minishell);
+		// atexit(check_leaks);
+		// exit(0);
 	}
 	safe_free_minishell(&minishell);
+	// atexit(check_leaks);
+	// exit(0);
 }
- 

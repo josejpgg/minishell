@@ -6,13 +6,14 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/27 14:27:30 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/01 17:38:33 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # define PROMPT "minishell$ "
+# define PROMPT_ERROR "minishell: "
 # define MAXARGS 10
 
 # include "lib/libft/libft.h"
@@ -200,17 +201,16 @@ struct cmd* nulterminate(struct cmd *cmd);
 void panic(char *s);
 int fork1(void);
 
-// cmd_controller
-int valid_builtins(t_cmd *cmd);
-
 // cmd_impl
 void run_internal(t_cmd *cmd, t_minishell *minishell);
 void run_external(t_cmd *cmd, t_minishell *minishell);
 
 // cmd_util.c
 void print_expand_variable(t_cmd *cmd, int idx, int *pos, t_minishell *minishell);
-int is_valid_quote(t_cmd *cmd, t_minishell *minishell);
 char *getenv_minishell(t_minishell *minishell, char *key);
+
+// quote.c
+int is_valid_quote(t_cmd *cmd, t_minishell *minishell);
 
 // vector
 int ft_vector_size(char **split);
@@ -239,9 +239,17 @@ void history_print(t_history *hist, const char *option);
 void history_clear(t_history *hist);
 void history_free(t_history *hist);
 
+// bi_controller.c
+int valid_builtins(t_cmd *cmd);
 
+// exit.c
+void exit_impl(t_cmd *cmd, t_minishell *minishell);
 
+// cd.c
+void cd_impl(t_cmd *cmd, t_minishell *minishell);
 
+// pwd.c
+void pwd_impl(t_cmd *cmd, t_minishell *minishell);
 
 void	print_vector(char **vector);
 

@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:27:25 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/27 14:08:59 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/04/29 21:58:54 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ struct cmd *parsecmd(char *s)
   char *es;
   struct cmd *cmd;
 
-  es = s + strlen(s);                 // es = end of string
+  es = s + strlen(s);      // es = end of string
   cmd = parseline(&s, es); // s = start of all the string
   peek(&s, es, "");
   if (s != es)
@@ -309,11 +309,32 @@ void exec_command(char *command, char **args)
   }
 }
 
+// void exec_command(char *command, char **args)
+// {
+//     // arrancamos en args+1 para no tocar el nombre del comando
+//     char **p = args + 1;
+//     while (*p)
+//     {
+//         char *clean = remove_quotes_simple(*p);
+//         // NO free(*p);
+//         *p = clean;
+//         p++;
+//     }
+//     if (execvp(command, args) == -1)
+//     {
+//         perror("exec failed");
+//         exit(EXIT_FAILURE);
+//     }
+// }
+
+// cat archivo.txt | grep hola | wc
+// cat archivo.txt | grep "hola" | wc
+// cat archivo.txt | grep 'hola' | wc
+
 void control_cmd(t_cmd *cmd, t_minishell *minishell)
 {
 	if (valid_builtins(cmd))
 	{
-		// cmd = prepare_builtins(cmd, minishell);
 		run_internal(cmd, minishell);
 	}
 	else

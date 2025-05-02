@@ -137,7 +137,7 @@ void load_history_file(t_history *hist, const char *histfile_name)
     char *file_content;
     char *start;
     ssize_t i;
-    printf("path: %s\n", path);
+    // printf("path: %s\n", path);
     if (!path)
         return;
     

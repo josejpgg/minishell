@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:45:13 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/27 14:12:41 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/02 14:23:12 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,20 +162,14 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 	}
 	else if (ft_strstr(ecmd->argv[0], "pwd"))
 	{
-		char *pwd = getcwd(NULL, 0);
-		if (!pwd)
-		{
-			printf("pwd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n");
-			minishell->status = 1;
-			return ;
-		}
-		write(1, pwd, ft_strlen(pwd));
-		write(1, "\n", 1);
-		free(pwd);
-		minishell->status = 0;
+		pwd_impl(cmd, minishell);
 	}
 	else if (ft_strstr(ecmd->argv[0], "cd"))
 	{
+		cd_impl(cmd, minishell);
+		return ;
+
+		
 		char *move = NULL;
 		char *tmp;
 		if (!is_valid_quote(cmd, minishell))
@@ -183,6 +177,13 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 			return ;
 		}
 
+		// check if there isn't an option
+		if (!ecmd->argv[1])
+		{
+			ecmd->argv[1] = getenv_minishell(minishell, "HOME");
+		}
+		// check if there isn't an option
+		
 		// error if there is an option
 		if (ecmd->argv[1][0] == '-')
 		{
@@ -317,34 +318,7 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 	}
 	else if (ft_strstr(ecmd->argv[0], "exit"))
 	{
-		if (!ecmd->argv[2])
-		{
-			idx = 0;
-			// exit with a specific value
-			if (ecmd->argv[1])
-			{
-				minishell->status = ft_atoi(ecmd->argv[1]) % 256;
-				while (ecmd->argv[1][idx])
-				{
-					if (!ft_isdigit(ecmd->argv[1][idx]))
-					{
-						printf("exit: numeric argument required\n");
-						minishell->status = 255;
-						break ;
-					}
-					idx++;
-				}
-			}
-			printf("exit\n");
-			// exit with last state of the program
-			exit(minishell->status);
-		}
-		else
-		{
-			printf("exit: too many arguments\n");
-			minishell->status = 1;
-			// return ;
-		}
+		exit_impl(cmd, minishell);
 	}
 	else if (ft_strstr(ecmd->argv[0], "export"))
 	{
