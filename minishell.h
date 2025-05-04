@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/01 17:38:33 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/04 18:14:16 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ typedef struct s_response
 // env
 void		init_env(t_minishell *minishell, char **envp);
 char *get_env_value(t_minishell *minishell, char *key);
-void set_env_value(t_minishell *minishell, char *key, char *value, int exported);
+void update_env_value(t_minishell *minishell, char *key, char *value, int exported);
 void create_env_value(t_minishell *minishell, char *key, char *value, int exported);
 int env_exists(t_minishell *minishell, char *key);
 void remove_env_value(t_minishell *minishell, char *key);
@@ -211,6 +211,12 @@ char *getenv_minishell(t_minishell *minishell, char *key);
 
 // quote.c
 int is_valid_quote(t_cmd *cmd, t_minishell *minishell);
+
+// env.c
+void env_impl(t_cmd *cmd, t_minishell *minishell);
+
+// export.c
+void export_impl(t_cmd *cmd, t_minishell *minishell);
 
 // vector
 int ft_vector_size(char **split);

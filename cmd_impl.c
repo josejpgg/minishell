@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:45:13 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/02 14:23:12 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/04 20:32:16 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 	int pos;
 	
 	ecmd = (t_execcmd *)cmd;
+	minishell->status = 0;
 	// print_vector(ecmd->argv);
 	char quote=0;
 	if (ft_strstr(ecmd->argv[0], "echo"))
@@ -167,154 +168,10 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 	else if (ft_strstr(ecmd->argv[0], "cd"))
 	{
 		cd_impl(cmd, minishell);
-		return ;
-
-		
-		char *move = NULL;
-		char *tmp;
-		if (!is_valid_quote(cmd, minishell))
-		{
-			return ;
-		}
-
-		// check if there isn't an option
-		if (!ecmd->argv[1])
-		{
-			ecmd->argv[1] = getenv_minishell(minishell, "HOME");
-		}
-		// check if there isn't an option
-		
-		// error if there is an option
-		if (ecmd->argv[1][0] == '-')
-		{
-			printf("cd: options are not permitted: %s\n", ecmd->argv[1]);
-			minishell->status = 1;
-			return ;
-		}
-		
-		idx = 1;
-		while (ecmd->argv[idx] && idx==1)
-		{
-			pos = 0;
-			// printf("ecmd->argv[idx][pos] %c\n", ecmd->argv[idx][pos]);
-			while (ecmd->argv[idx][pos])
-			{
-				// control quote
-				if (!quote && (ecmd->argv[idx][pos] == '\'' || ecmd->argv[idx][pos] == '\"'))
-				{
-					quote = ecmd->argv[idx][pos];
-					pos++;
-					continue ;
-				}
-				else if (quote && ecmd->argv[idx][pos] == quote)
-				{
-					quote = 0;
-					pos++;
-					continue ;
-				}
-				// control quote
-
-				// control $
-				if (quote != '\'' && ecmd->argv[idx][pos] == '$')
-				{
-					pos++;
-					// control $?
-					// check if variable is valid. [a-zA-Z_] and not \ or "
-					if ((ft_isalnum(ecmd->argv[idx][pos]) || ecmd->argv[idx][pos] == '_') && ecmd->argv[idx][pos] != '\\' && ecmd->argv[idx][pos] != '"')
-					{
-						// loop through the end of the variable
-						int se = pos;
-						int es = pos;
-						char *env;
-						while (ecmd->argv[idx][se + es] && (ft_isalnum(ecmd->argv[idx][se + es]) || ecmd->argv[idx][se + es] == '_'))
-							es++;
-						tmp = ft_substr(ecmd->argv[idx], se, es);
-						env = getenv_minishell(minishell, tmp);
-						if (!move && env)
-						{
-							// not free env because is a pointer to the environment variable
-							move = ft_strdup(env);
-						}
-						else if (move && env)
-						{
-							free(tmp);
-							tmp = ft_strjoin(move, env);
-							free(move);
-							move = ft_strdup(tmp);
-						}
-						else
-						{
-							if (!move)
-								move = ft_strdup("");
-							else
-							{
-								free(tmp);
-								tmp = ft_strdup(move);
-								free(move);
-								move = ft_strjoin(tmp, "");
-							}
-						}
-						free(tmp);
-						pos += es;
-						// continue with next words
-						continue ;
-					}
-					else
-					{
-						// error is not a valid argument after $
-						printf("cd: No such file or directory\n");
-						minishell->status = 1;
-						return ;
-					}
-				}
-				else if (quote != '\'')
-				{
-					if (!move)
-					{
-						move = ft_strjoin("", ft_substr(ecmd->argv[idx], pos, 1));
-					}
-					else
-					{
-						tmp = ft_strdup(move);
-						free(move);
-						move = ft_strjoin(tmp, ft_substr(ecmd->argv[idx], pos, 1));
-						free(tmp);
-					}
-				}
-				else 
-				{
-					// character not valid
-					printf("cd: syntax error\n");
-					minishell->status = 1;
-					return ;
-				}
-				pos++;
-			}
-			idx++;
-		}
-		// printf("move: %s\n", move);
-		// move directory
-		if (chdir(move) != 0)
-		{
-			printf("cd: no such file or directory: %s\n", ecmd->argv[1]);
-			minishell->status = 1;
-			return ;
-		}
-		set_env_value(minishell, "OLDPWD", get_env_value(minishell, "PWD"), 1);
-		set_env_value(minishell, "PWD", getcwd(NULL, 0), 1);
-		free(move);
-		minishell->status = 0;
 	}
 	else if (ft_strstr(ecmd->argv[0], "env"))
 	{
-		int i = 0;
-		while (minishell->env[i] && minishell->exported[i])
-		{
-			write(1, minishell->env[i], ft_strlen(minishell->env[i]));
-			write(1, "\n", 1);
-			i++;
-		}
-		minishell->status = 0;
+		env_impl(cmd, minishell);
 	}
 	else if (ft_strstr(ecmd->argv[0], "exit"))
 	{
@@ -322,6 +179,10 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 	}
 	else if (ft_strstr(ecmd->argv[0], "export"))
 	{
+		export_impl(cmd, minishell);
+		
+		return ;
+
 		idx = 1;
 		
 		if (!ecmd->argv[idx])
@@ -344,8 +205,11 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 			int argc = 0;
 			q = &ecmd->argv[idx];
 			int exported = 0;
-			while (ecmd->argv[idx][++s])
+			printf("here\n");
+			while (++s < ft_strlen(ecmd->argv[idx]) && ecmd->argv[idx][s])
 			{
+				printf("s = %d\n", s);
+				printf("ecmd->argv[idx][++s] = %c\n", ecmd->argv[idx][s]);
 				if (s == 0 && ft_isalpha(ecmd->argv[idx][s]) || ecmd->argv[idx][s] == '_')
 				{
 					if (ecmd->argv[idx][s + 1])
@@ -353,11 +217,15 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 				}
 				else if (s != 0 && ft_isalnum(ecmd->argv[idx][s]) || ecmd->argv[idx][s] == '_')
 				{
+					printf("here3\n");
 					if (ecmd->argv[idx][s + 1])
 						continue ;
+					else
+						arge[argc++] = *q;
 				}
 				else
 				{
+					printf("here2\n");
 					if (s != 0 && ecmd->argv[idx][s] == '=')
 					{
 						ecmd->argv[idx][s] = 0;
@@ -375,18 +243,24 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 					minishell->status = 1;
 					return ;
 				}
-				
+				break ;
+				printf("here1\n");
 			}
+			printf("here4\n");
 			arge[argc] = 0;
+			printf("here5\n");
 
 			// check if variable already exists
 			if (env_exists(minishell, arge[0]))
 			{
+			printf("here6\n");
+
 				//update variable if already exists
-				set_env_value(minishell, arge[0], arge[1], exported);
+				update_env_value(minishell, arge[0], arge[1], exported);
 			}
 			else
 			{
+			printf("here7\n");	
 				//add variable to environment
 				create_env_value(minishell, arge[0], arge[1], exported);
 			}

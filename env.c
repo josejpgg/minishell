@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 17:09:29 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/09 22:15:06 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/04 18:44:25 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ char *get_env_value(t_minishell *minishell, char *key)
     return NULL;
 }
 
-void set_env_value(t_minishell *minishell, char *key, char *value, int exported)
+void update_env_value(t_minishell *minishell, char *key, char *value, int exported)
 {
     int len = ft_strlen(key);
 	int len_value;
@@ -77,7 +77,11 @@ void set_env_value(t_minishell *minishell, char *key, char *value, int exported)
 	else
 		len_value = ft_strlen(value);
     for (int i = 0; minishell->env[i]; i++) {
-        if (ft_strncmp(minishell->env[i], key, len) == 0 && minishell->env[i][len] == '=') {
+        if (ft_strncmp(minishell->env[i], key, len) == 0 && (minishell->env[i][len] == '=' || minishell->env[i][len] == '\0')) {
+		// if (minishell->env[i][ft_strlen(key)] == '=' || minishell->env[i][ft_strlen(key)] == '\0') {
+			// printf("updating\n");
+			// printf("value = %s\n", value);
+			// printf("key = %s\n", minishell->env[i]);
             free(minishell->env[i]);
 
             // Allocate space for "key=value\0"
@@ -86,7 +90,7 @@ void set_env_value(t_minishell *minishell, char *key, char *value, int exported)
 
             // Manually build the string: key + '=' + value
             strcpy(minishell->env[i], key);
-            strcat(minishell->env[i], "=");
+			strcat(minishell->env[i], "=");
 			if (!value)
 			{
 				strcat(minishell->env[i], "");
@@ -116,17 +120,15 @@ void create_env_value(t_minishell *minishell, char *key, char *value, int export
 		new_env[i] = minishell->env[i];
 		new_exported[i] = minishell->exported[i];
 	}
-	new_env[i] = ft_strjoin(key, "=");
-	if (!value)
-	{
-		new_env[i] = ft_strjoin(new_env[i], "");
-		new_exported[i] = exported;
-	}
+	if (exported == 1)
+		new_env[i] = ft_strjoin(key, "=");
 	else
-	{
+		new_env[i] = ft_strjoin(key, "");
+	if (!value)
+		new_env[i] = ft_strjoin(new_env[i], "");
+	else
 		new_env[i] = ft_strjoin(new_env[i], value);
-		new_exported[i] = exported;
-	}
+	new_exported[i] = exported;
 	new_env[i + 1] = NULL;
 	new_exported[i + 1] = 1;
 	free(minishell->env);
@@ -139,10 +141,10 @@ void create_env_value(t_minishell *minishell, char *key, char *value, int export
 int env_exists(t_minishell *minishell, char *key)
 {
 	int i = 0;
-	while (minishell->env[i])
+	while (minishell->env[i] && key)
 	{
 		if (ft_strncmp(minishell->env[i], key, ft_strlen(key)) == 0)
-			if (minishell->env[i][ft_strlen(key)] == '=')
+			if (minishell->env[i][ft_strlen(key)] == '=' || minishell->env[i][ft_strlen(key)] == '\0')
 				return (1);
 		i++;
 	}
