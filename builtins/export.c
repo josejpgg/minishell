@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 17:48:19 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/04 20:36:40 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/06 19:30:01 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,15 +54,6 @@ void static	save_argument(char *arg[2], char *argument, char **q, int s)
 		arg[1] = *q;
 }
 
-void static	print_error(char *argument, t_minishell *minishell)
-{
-	ft_putstr_fd(PROMPT_ERROR, STDERR_FILENO);
-	ft_putstr_fd("export: '", STDERR_FILENO);
-	ft_putstr_fd(argument, STDERR_FILENO);
-	ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
-	minishell->status = 1;
-}
-
 void static	split_params(char *arg[2], char *argument, t_minishell *minishell)
 {
 	int		s;
@@ -85,7 +76,7 @@ void static	split_params(char *arg[2], char *argument, t_minishell *minishell)
 			if (s != 0 && argument[s] == '=')
 				save_argument(arg, argument, q, s);
 			else
-				print_error(argument, minishell);
+				export_error(argument, minishell);
 			break ;
 		}
 	}
@@ -109,12 +100,6 @@ int static	valid_if_exported(char *argument, char *key, t_minishell *minishell)
 		}
 	}
 	return (exported);
-}
-
-void static	init_var(char *arg[2])
-{
-	arg[0] = 0;
-	arg[1] = 0;
 }
 
 void	export_impl(t_cmd *cmd, t_minishell *minishell)

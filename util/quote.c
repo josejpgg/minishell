@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 17:29:17 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/01 17:40:11 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/06 19:28:20 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 char check_argument(t_execcmd *ecmd, t_minishell *minishell, int idx)
 {
 	int pos;
-	char quote;
+	char quote;	
 	
 	pos = 0;
 	while (ecmd->argv[idx][pos])

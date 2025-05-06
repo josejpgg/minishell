@@ -6,102 +6,128 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 16:49:52 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/02 14:39:06 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/06 20:23:30 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// void expand_variables(t_cmd *cmd, t_minishell *minishell)
+
+// char *expand_variables(char *arg, t_minishell *minishell)
 // {
 // 	char *s;
 // 	char *es;
 // 	int idx = 1;
-// 	t_execcmd *ecmd;
 // 	char quote;
 // 	char *result;
 // 	char *var_name;
 // 	char tmp[2];
 // 	char *tmp_result;
+// 	int pos = -1;
 
 	
-// 	ecmd = (t_execcmd *)cmd;
 // 	tmp[1] = '\0';
-// 	while (ecmd->argv[idx])
+	
+// 	result = ft_strdup("");
+// 	var_name = ft_strdup("");
+// 	s = arg;
+// 	es = s + ft_strlen(arg);
+// 	quote = 0;
+// 	while (arg[++pos])
 // 	{
-// 		result = ft_strdup("");
-// 		var_name = ft_strdup("");
-// 		s = ecmd->argv[idx];
-// 		es = s + ft_strlen(ecmd->argv[idx]);
-// 		while (*s)
+// 		// printf("result = %s\n", result);
+// 		printf("arg[pos] = %c\n", arg[pos]);
+// 		// control quote. do not handle quote or backslash
+// 		if (!quote && (arg[pos] == '\'' || arg[pos] == '\"'))
 // 		{
-// 			// control quote. do not handle quote or backslash
-// 			if (!quote && (*s == '\'' || *s == '\"'))
-// 			{
-// 				tmp[0] = *s;
-// 				tmp_result = ft_strjoin(result, tmp);
-// 				free(result);
-// 				result = ft_strdup(tmp_result);
-// 				free(tmp_result);
-// 				quote = *s;
-// 				s++;
-// 				continue ;
-// 			}
-// 			else if (quote && *s == quote)
-// 			{
-// 				tmp[0] = *s;
-// 				tmp_result = ft_strjoin(result, tmp);
-// 				free(result);
-// 				result = ft_strdup(tmp_result);
-// 				free(tmp_result);
-// 				quote = 0;
-// 				s++;
-// 				continue ;
-// 			}
-// 			// control quote
-
-// 			// control $ if start like a valid variable
-// 			if (quote != '\'' && *s == '$')
-// 			{
-// 				s++;
-// 				if (*s == '?')
-// 				{
-// 					tmp_result = ft_strjoin(result, ft_itoa(minishell->status));
-// 					free(result);
-// 					result = ft_strdup(tmp_result);
-// 					free(tmp_result);
-// 					s++;
-// 					continue ;
-// 				}
-// 				else if (*(s + 1) == '_' || ft_isalpha(*(s + 1)))
-// 				{
-// 					while (*s && (*s == '_' || ft_isalnum(*s)))
-// 					{
-// 						tmp[0] = *s;
-// 						var_name = ft_strjoin(var_name, tmp);
-// 						s++;
-// 					}
-// 					tmp_result = ft_strjoin(result, getenv_minishell(minishell, var_name));
-// 					free(result);
-// 					result = ft_strdup(tmp_result);
-// 					free(tmp_result);
-// 					free(var_name);
-// 					continue ;
-// 				}
-// 			}
-// 			tmp[0] = *s;
+// 			tmp[0] = arg[pos];
 // 			tmp_result = ft_strjoin(result, tmp);
 // 			free(result);
 // 			result = ft_strdup(tmp_result);
 // 			free(tmp_result);
-// 			s++;
+// 			quote = arg[pos];
+// 			printf("quote_0 = %c\n", quote);
+// 			// s++;
+// 			pos++;
+// 			continue ;
 // 		}
-// 		if (s == es)
+// 		else if (quote && arg[pos] == quote)
 // 		{
-// 			ecmd->argv[idx] = result;
+// 			tmp[0] = arg[pos];
+// 			tmp_result = ft_strjoin(result, tmp);
+// 			free(result);
+// 			result = ft_strdup(tmp_result);
+// 			free(tmp_result);
+// 			quote = 0;
+// 			// s++;
+// 			pos++;
+// 			continue ;
 // 		}
-// 		idx++;
+// 		// control quote
+// 		printf("quote = %c\n", quote);
+// 		// control $ if start like a valid variable
+// 		if (quote != '\'' && arg[pos] == '$')
+// 		{
+// 			printf("here\n");
+// 			// s++;
+// 			pos++;
+// 			if (arg[pos] == '?')
+// 			{
+// 				tmp_result = ft_strjoin(result, ft_itoa(minishell->status));
+// 				free(result);
+// 				result = ft_strdup(tmp_result);
+// 				free(tmp_result);
+// 				// s++;
+// 				pos++;
+// 				continue ;
+// 			}
+// 			else if (*(s) == '_' || ft_isalpha(*(s)))
+// 			{
+// 				while (arg[pos] && (arg[pos] == '_' || ft_isalnum(arg[pos])))
+// 				{
+// 					tmp[0] = arg[pos];
+// 					var_name = ft_strjoin(var_name, tmp);
+// 					// s++;
+// 					pos++;
+// 				}
+// 				tmp_result = ft_strjoin(result, getenv_minishell(minishell, var_name));
+// 				free(result);
+// 				result = ft_strdup(tmp_result);
+// 				free(tmp_result);
+// 				free(var_name);
+// 				continue ;
+// 			}
+// 			// else if (*(s + 1) == '_' || ft_isalpha(*(s + 1)))
+// 			// {
+// 			// 	while (*s && (*s == '_' || ft_isalnum(*s)))
+// 			// 	{
+// 			// 		tmp[0] = *s;
+// 			// 		var_name = ft_strjoin(var_name, tmp);
+// 			// 		s++;
+// 			// 	}
+// 			// 	tmp_result = ft_strjoin(result, getenv_minishell(minishell, var_name));
+// 			// 	free(result);
+// 			// 	result = ft_strdup(tmp_result);
+// 			// 	free(tmp_result);
+// 			// 	free(var_name);
+// 			// 	continue ;
+// 			// }
+// 			// s++;
+// 			pos++;
+// 		}
+// 		tmp[0] = arg[pos];
+// 		tmp_result = ft_strjoin(result, tmp);
+// 		free(result);
+// 		result = ft_strdup(tmp_result);
+// 		free(tmp_result);
+// 		// s++;
+// 		pos++;
 // 	}
+// 	if (arg[pos]=='\0')
+// 	{
+// 		arg = result;
+// 	}
+// 	return arg;
 // }
 
 char *expand_variables(char *arg, t_minishell *minishell)
@@ -122,8 +148,10 @@ char *expand_variables(char *arg, t_minishell *minishell)
 	var_name = ft_strdup("");
 	s = arg;
 	es = s + ft_strlen(arg);
+	quote = 0;
 	while (*s)
 	{
+		// printf("result = %s\n", result);
 		// control quote. do not handle quote or backslash
 		if (!quote && (*s == '\'' || *s == '\"'))
 		{
@@ -148,7 +176,6 @@ char *expand_variables(char *arg, t_minishell *minishell)
 			continue ;
 		}
 		// control quote
-
 		// control $ if start like a valid variable
 		if (quote != '\'' && *s == '$')
 		{

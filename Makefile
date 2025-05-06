@@ -10,10 +10,10 @@ safe_func.c interactive.c safe_free.c str_util.c \
 command.c line.c pipe.c redirection.c token.c \
 cmd_impl.c vector.c cmd_util.c builtin_impl.c \
 history.c history2.c \
-./builtins/bi_controller.c \
+./builtins/controller.c \
 ./builtins/cd.c ./builtins/echo.c ./builtins/env.c ./builtins/exit.c \
 ./builtins/export.c ./builtins/pwd.c ./builtins/unset.c \
-./util/quote.c
+./util/quote.c ./util/error.c ./util/util.c
 # READLINE := -lreadline -lncurses
 READLINE := -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline
 # READLINE := -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline

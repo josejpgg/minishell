@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:45:13 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/04 20:32:16 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/06 19:55:23 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 	char quote=0;
 	if (ft_strstr(ecmd->argv[0], "echo"))
 	{
+		echo_impl(cmd, minishell);
+		return ;
+
 		// minishell->status = 0;
 		// quote validator
 		if (!is_valid_quote(cmd, minishell))
@@ -180,136 +183,10 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 	else if (ft_strstr(ecmd->argv[0], "export"))
 	{
 		export_impl(cmd, minishell);
-		
-		return ;
-
-		idx = 1;
-		
-		if (!ecmd->argv[idx])
-		{
-			// print all environment variables sorted
-			printf("declare -x \n");
-		}
-		while (ecmd->argv[idx])
-		{
-			// valid if quote is valid
-			if (!is_valid_quote(cmd, minishell))
-				return ;
-			ecmd->argv[idx] = expand_variables(ecmd->argv[idx], minishell);
-			// remove quotes if exists
-			remove_quotes(ecmd, idx);
-			// check if value is valid
-			int s = -1;
-			char **q;
-			char *arge[3];
-			int argc = 0;
-			q = &ecmd->argv[idx];
-			int exported = 0;
-			printf("here\n");
-			while (++s < ft_strlen(ecmd->argv[idx]) && ecmd->argv[idx][s])
-			{
-				printf("s = %d\n", s);
-				printf("ecmd->argv[idx][++s] = %c\n", ecmd->argv[idx][s]);
-				if (s == 0 && ft_isalpha(ecmd->argv[idx][s]) || ecmd->argv[idx][s] == '_')
-				{
-					if (ecmd->argv[idx][s + 1])
-						continue ;
-				}
-				else if (s != 0 && ft_isalnum(ecmd->argv[idx][s]) || ecmd->argv[idx][s] == '_')
-				{
-					printf("here3\n");
-					if (ecmd->argv[idx][s + 1])
-						continue ;
-					else
-						arge[argc++] = *q;
-				}
-				else
-				{
-					printf("here2\n");
-					if (s != 0 && ecmd->argv[idx][s] == '=')
-					{
-						ecmd->argv[idx][s] = 0;
-						arge[argc++] = *q;
-						*q = *q + s + 1;
-						exported = 1;
-						while (ecmd->argv[idx][++s])
-							;					
-						if (!ecmd->argv[idx][s + 1])
-							arge[argc++] = *q;
-						break ;
-					}
-					// print error if variable is not valid
-					printf("export: `%s': not a valid identifier\n", ecmd->argv[idx]);
-					minishell->status = 1;
-					return ;
-				}
-				break ;
-				printf("here1\n");
-			}
-			printf("here4\n");
-			arge[argc] = 0;
-			printf("here5\n");
-
-			// check if variable already exists
-			if (env_exists(minishell, arge[0]))
-			{
-			printf("here6\n");
-
-				//update variable if already exists
-				update_env_value(minishell, arge[0], arge[1], exported);
-			}
-			else
-			{
-			printf("here7\n");	
-				//add variable to environment
-				create_env_value(minishell, arge[0], arge[1], exported);
-			}
-			idx++;	
-		}
-		minishell->status = 0;
 	}
 	else if (ft_strstr(ecmd->argv[0], "unset"))
 	{
-		// TODO Valid no options
-		idx = 1;
-		while (ecmd->argv[idx])
-		{
-			// valid if quote is valid
-			if (!is_valid_quote(cmd, minishell))
-				return ;
-			ecmd->argv[idx] = expand_variables(ecmd->argv[idx], minishell);
-			// remove quotes if exists
-			remove_quotes(ecmd, idx);
-			
-			
-			// check if value is valid
-			int s = -1;
-			while (ecmd->argv[idx][++s])
-			{
-				if (s == 0 && ft_isalpha(ecmd->argv[idx][s]) || ecmd->argv[idx][s] == '_')
-				{
-					if (ecmd->argv[idx][s + 1])
-						continue ;
-				}
-				else if (s != 0 && ft_isalnum(ecmd->argv[idx][s]) || ecmd->argv[idx][s] == '_')
-				{
-					if (ecmd->argv[idx][s + 1])
-						continue ;
-				}
-				else
-				{
-					// print error if variable is not valid
-					printf("unset: `%s': not a valid identifier\n", ecmd->argv[idx]);
-					minishell->status = 1;
-					return ;
-				}
-				
-			}
-			// remove variable from environment
-			remove_env_value(minishell, ecmd->argv[idx]);
-			idx++;
-		}
-		minishell->status = 0;
+		unset_impl(cmd, minishell);
 	}
 	// free all variables from ecmd
 }

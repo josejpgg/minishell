@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/04 18:14:16 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/06 19:50:04 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ typedef struct s_response
 // env
 void		init_env(t_minishell *minishell, char **envp);
 char *get_env_value(t_minishell *minishell, char *key);
-void update_env_value(t_minishell *minishell, char *key, char *value, int exported);
+void set_env_value(t_minishell *minishell, char *key, char *value, int exported);
 void create_env_value(t_minishell *minishell, char *key, char *value, int exported);
 int env_exists(t_minishell *minishell, char *key);
 void remove_env_value(t_minishell *minishell, char *key);
@@ -214,9 +214,13 @@ int is_valid_quote(t_cmd *cmd, t_minishell *minishell);
 
 // env.c
 void env_impl(t_cmd *cmd, t_minishell *minishell);
+void update_env_value(t_minishell *minishell, char *key, char *value, int exported);
+
+// util.c
+void	init_var(char *arg[2]);
 
 // export.c
-void export_impl(t_cmd *cmd, t_minishell *minishell);
+void	export_impl(t_cmd *cmd, t_minishell *minishell);
 
 // vector
 int ft_vector_size(char **split);
@@ -245,7 +249,7 @@ void history_print(t_history *hist, const char *option);
 void history_clear(t_history *hist);
 void history_free(t_history *hist);
 
-// bi_controller.c
+// controller.c
 int valid_builtins(t_cmd *cmd);
 
 // exit.c
@@ -256,6 +260,16 @@ void cd_impl(t_cmd *cmd, t_minishell *minishell);
 
 // pwd.c
 void pwd_impl(t_cmd *cmd, t_minishell *minishell);
+
+// error.c
+void	export_error(char *argument, t_minishell *minishell);
+void	unset_error(char *argument, t_minishell *minishell);
+
+// unset.c
+void	unset_impl(t_cmd *cmd, t_minishell *minishell);
+
+// echo.c
+void	echo_impl(t_cmd *cmd, t_minishell *minishell);
 
 void	print_vector(char **vector);
 
