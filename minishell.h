@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/06 19:50:04 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/08 21:58:49 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -272,5 +272,7 @@ void	unset_impl(t_cmd *cmd, t_minishell *minishell);
 void	echo_impl(t_cmd *cmd, t_minishell *minishell);
 
 void	print_vector(char **vector);
+
+void 	check_leaks(void);
 
 #endif

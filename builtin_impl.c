@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/29 16:49:52 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/06 20:23:30 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/08 22:47:47 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,52 @@
 // 	return arg;
 // }
 
+// echo '$USER'
+
 char *expand_variables(char *arg, t_minishell *minishell)
+{
+	char *s = arg, *result = ft_strdup(""), *var, tmp[2] = {'\0', '\0'};
+	char quote = 0, *tmp_result;
+
+	while (*s)
+	{
+		if (!quote && (*s == '\'' || *s == '\"'))
+		{
+			quote = *s++;
+			continue;
+		}
+		else if (quote && *s == quote)
+		{
+			quote = 0, s++;
+			continue;
+		}
+		else if (*s == '$' && quote != '\'')
+		{
+			s++;
+			if (*s == '?')
+				var = ft_itoa(minishell->status), s++;
+			else if (*s == '_' || ft_isalpha(*s))
+			{
+				int len = 0; while (s[len] && (ft_isalnum(s[len]) || s[len] == '_')) len++;
+				var = ft_substr(s, 0, len);
+				char *val = getenv_minishell(minishell, var);
+				free(var); var = ft_strdup(val);
+				s += len;
+			}
+			else continue;
+		}
+		else
+			tmp[0] = *s++, var = ft_strdup(tmp);
+		
+		tmp_result = ft_strjoin(result, var);
+		free(result); free(var);
+		result = tmp_result;
+	}
+	return result;
+}
+
+
+char *expand_variables2(char *arg, t_minishell *minishell)
 {
 	char *s;
 	char *es;
@@ -145,7 +190,6 @@ char *expand_variables(char *arg, t_minishell *minishell)
 	tmp[1] = '\0';
 	
 	result = ft_strdup("");
-	var_name = ft_strdup("");
 	s = arg;
 	es = s + ft_strlen(arg);
 	quote = 0;
@@ -191,6 +235,7 @@ char *expand_variables(char *arg, t_minishell *minishell)
 			}
 			else if (*(s) == '_' || ft_isalpha(*(s)))
 			{
+				var_name = ft_strdup("");
 				while (*s && (*s == '_' || ft_isalnum(*s)))
 				{
 					tmp[0] = *s;
@@ -204,21 +249,6 @@ char *expand_variables(char *arg, t_minishell *minishell)
 				free(var_name);
 				continue ;
 			}
-			// else if (*(s + 1) == '_' || ft_isalpha(*(s + 1)))
-			// {
-			// 	while (*s && (*s == '_' || ft_isalnum(*s)))
-			// 	{
-			// 		tmp[0] = *s;
-			// 		var_name = ft_strjoin(var_name, tmp);
-			// 		s++;
-			// 	}
-			// 	tmp_result = ft_strjoin(result, getenv_minishell(minishell, var_name));
-			// 	free(result);
-			// 	result = ft_strdup(tmp_result);
-			// 	free(tmp_result);
-			// 	free(var_name);
-			// 	continue ;
-			// }
 			s++;
 		}
 		tmp[0] = *s;
@@ -232,6 +262,8 @@ char *expand_variables(char *arg, t_minishell *minishell)
 	{
 		arg = result;
 	}
+	atexit(check_leaks);
+	exit(0);
 	return arg;
 }
 
