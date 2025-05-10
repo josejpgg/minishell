@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:27:25 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/29 21:58:54 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/10 14:25:57 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,6 +180,13 @@ void runcmd(struct cmd *cmd, t_minishell *minishell)
 	else
 	{
     valid_command(ecmd, minishell);
+    int idx = 1;
+    while (ecmd->argv[idx])
+    {
+        ecmd->argv[idx] = expand_variables(ecmd->argv[idx], minishell);
+        remove_quotes(ecmd, idx);
+        idx++;
+    }
     exec_command(ecmd->argv[0], ecmd->argv);
 		ft_putstr_fd("exec failed ", 2);
 		ft_putstr_fd(ecmd->argv[0], 2);
