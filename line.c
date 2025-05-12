@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:35:25 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/26 19:46:07 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/12 20:56:16 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ struct cmd* nulterminate(struct cmd *cmd)
 
 void panic(char *s)
 {
-  ft_exit_message_fd(2, s, 1);
+  ft_putstr_fd(PROMPT_ERROR, 2);
+  ft_putstr_fd(s, 2);
 }
 
 int fork1(void)

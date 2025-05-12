@@ -6,54 +6,14 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:27:25 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/10 14:25:57 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/12 22:29:58 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-struct cmd *execcmd()
-{
-  struct execcmd *cmd;
 
-  cmd = malloc(sizeof(*cmd));
-  memset(cmd, 0, sizeof(*cmd));
-  cmd->type = EXEC;
-  return (struct cmd *)cmd;
-}
 
-struct cmd *parseexec(char **ps, char *es)
-{
-  char *q, *eq;
-  int tok, argc;
-  struct execcmd *cmd;
-  struct cmd *ret;
-
-  ret = execcmd();
-  cmd = (struct execcmd *)ret;
-
-  argc = 0;
-  ret = parseredirs(ret, ps, es);
-
-  while (!peek(ps, es, "|"))
-  { // loop character by character
-    if ((tok = gettoken(ps, es, &q, &eq)) == 0)
-      break;
-    if (tok != 'a')
-      panic("syntax");
-    cmd->argv[argc] = q;
-    cmd->eargv[argc] = eq;
-    argc++;
-    if (argc >= MAXARGS)
-      panic("too many args");
-    ret = parseredirs(ret, ps, es);
-	// printf("tok: %d\n", tok);
-  }
-//   print_vector(cmd->argv);
-  cmd->argv[argc] = 0;
-  cmd->eargv[argc] = 0;
-  return ret;
-}
 
 void valid_command(t_execcmd *ecmd, t_minishell *minishell)
 {
@@ -92,26 +52,6 @@ void valid_command(t_execcmd *ecmd, t_minishell *minishell)
       exit(127);
     }
   }
-}
-
-struct cmd *parsecmd(char *s)
-{
-  char *es;
-  struct cmd *cmd;
-
-  es = s + strlen(s);      // es = end of string
-  cmd = parseline(&s, es); // s = start of all the string
-  peek(&s, es, "");
-  if (s != es)
-  {
-    ft_putstr_fd("leftovers: ", 2);
-    ft_putstr_fd(s, 2);
-    ft_putchar_fd('\n', 2);
-    panic("syntax");
-  }
-  
-  nulterminate(cmd);
-  return cmd;
 }
 
 char *read_stdin_to_str(void)
@@ -167,14 +107,6 @@ void runcmd(struct cmd *cmd, t_minishell *minishell)
       exit(0);
 	if (valid_builtins(cmd))
 	{
-    // printf("check this\n");
-    // char *tmp = read_stdin_to_str();
-    // if (tmp)
-    // {
-    //   ecmd->argv[1] = tmp;
-    //   ecmd->argv[2] = 0;
-    //   // free(tmp);
-    // }
 		run_internal(cmd, minishell);
 	}
 	else
@@ -196,33 +128,6 @@ void runcmd(struct cmd *cmd, t_minishell *minishell)
 
   case REDIR:
     rcmd = (struct redircmd *)cmd;
-    // if (rcmd->hdoc) {
-    //     int pipefd[2];
-    //     if (pipe(pipefd) < 0)
-    //         panic("pipe error");
-    //     if (fork1() == 0) {
-    //         close(pipefd[0]);
-    //         char *line = NULL;
-    //         while ((line = get_next_line(STDIN_FILENO))) {
-    //           printf("test!\n");
-    //             size_t length = ft_strlen(line);
-    //             if (length > 0 && line[length - 1] == '\n')
-    //                 line[length - 1] = '\0';
-    //             if (strcmp(line, rcmd->hdoc) == 0) {
-    //                 free(line);
-    //                 break;
-    //             }
-    //             write(pipefd[1], line, ft_strlen(line));
-    //             write(pipefd[1], "\n", 1);
-    //             free(line);
-    //         }
-    //         close(pipefd[1]);
-    //         exit(0);
-    //     }
-    //     close(pipefd[1]);
-    //     dup2(pipefd[0], STDIN_FILENO);
-    //     close(pipefd[0]);
-    // }
     if (rcmd->hdoc) {
         int pipefd[2];
         if (pipe(pipefd) < 0)
@@ -236,10 +141,6 @@ void runcmd(struct cmd *cmd, t_minishell *minishell)
         close(pipefd[0]);
         free(rcmd->hdoc);
 
-        // ecmd = (struct execcmd *)cmd;
-        // ecmd->argv[1] = rcmd->hdoc;
-        // ecmd->argv[2] = 0;
-        
     }
      else {
         int fd;
@@ -307,8 +208,6 @@ void runcmd(struct cmd *cmd, t_minishell *minishell)
 
 void exec_command(char *command, char **args)
 {
-  // ft_printf("%s\n", command);
-  // print_vector(args);
   if (execvp(command, args) == -1)
   {
     perror("exec failed");
@@ -316,30 +215,10 @@ void exec_command(char *command, char **args)
   }
 }
 
-// void exec_command(char *command, char **args)
-// {
-//     // arrancamos en args+1 para no tocar el nombre del comando
-//     char **p = args + 1;
-//     while (*p)
-//     {
-//         char *clean = remove_quotes_simple(*p);
-//         // NO free(*p);
-//         *p = clean;
-//         p++;
-//     }
-//     if (execvp(command, args) == -1)
-//     {
-//         perror("exec failed");
-//         exit(EXIT_FAILURE);
-//     }
-// }
-
-// cat archivo.txt | grep hola | wc
-// cat archivo.txt | grep "hola" | wc
-// cat archivo.txt | grep 'hola' | wc
-
 void control_cmd(t_cmd *cmd, t_minishell *minishell)
 {
+  if (minishell->error_syntax)
+    return ;
 	if (valid_builtins(cmd))
 	{
 		run_internal(cmd, minishell);

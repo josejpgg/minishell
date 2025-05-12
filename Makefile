@@ -13,7 +13,8 @@ history.c history2.c \
 ./builtins/controller.c \
 ./builtins/cd.c ./builtins/echo.c ./builtins/env.c ./builtins/exit.c \
 ./builtins/export.c ./builtins/pwd.c ./builtins/unset.c \
-./util/quote.c ./util/error.c ./util/util.c
+./util/quote.c ./util/error.c ./util/util.c \
+parse.c constructor.c
 # READLINE := -lreadline -lncurses
 READLINE := -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline
 # READLINE := -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline

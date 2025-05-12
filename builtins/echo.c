@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 17:48:19 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/08 22:47:42 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/12 22:45:20 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,9 @@ void	echo_impl(t_cmd *cmd, t_minishell *minishell)
 
 	ecmd = (t_execcmd *)cmd;
 	new_line = 1;
-	idx = 1;
-	while (ecmd->argv[idx] && ft_strstr(ecmd->argv[idx], "-n"))
-	{
+	idx = 0;
+	while (ecmd->argv[++idx] && ft_strstr(ecmd->argv[idx], "-n"))
 		new_line = 0;
-		idx++;
-	}
-	
 	while (ecmd->argv[idx])
 	{
 		if (!is_valid_quote(cmd, minishell))
@@ -41,6 +37,5 @@ void	echo_impl(t_cmd *cmd, t_minishell *minishell)
 	}
 	if (new_line)
 		ft_putstr_fd("\n", STDOUT_FILENO);
+	minishell->status = 0;
 }
-
-// echo '$USER'

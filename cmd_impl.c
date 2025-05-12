@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:45:13 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/08 22:00:24 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/12 22:42:46 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,40 +15,22 @@
 void run_internal(t_cmd *cmd, t_minishell *minishell)
 {
 	t_execcmd *ecmd;
-	int idx;
-	int pos;
 	
 	ecmd = (t_execcmd *)cmd;
-	minishell->status = 0;
-	char quote=0;
 	if (ft_strstr(ecmd->argv[0], "echo"))
-	{
 		echo_impl(cmd, minishell);
-	}
 	else if (ft_strstr(ecmd->argv[0], "pwd"))
-	{
 		pwd_impl(cmd, minishell);
-	}
 	else if (ft_strstr(ecmd->argv[0], "cd"))
-	{
 		cd_impl(cmd, minishell);
-	}
 	else if (ft_strstr(ecmd->argv[0], "env"))
-	{
 		env_impl(cmd, minishell);
-	}
 	else if (ft_strstr(ecmd->argv[0], "exit"))
-	{
 		exit_impl(cmd, minishell);
-	}
 	else if (ft_strstr(ecmd->argv[0], "export"))
-	{
 		export_impl(cmd, minishell);
-	}
 	else if (ft_strstr(ecmd->argv[0], "unset"))
-	{
 		unset_impl(cmd, minishell);
-	}
 	// free all variables from ecmd
 }
 

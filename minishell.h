@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/08 21:58:49 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/12 22:27:52 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,6 @@ typedef enum e_type
 	EXIT,
 }	t_type;
 
-// typedef struct env
-// {
-// 	char	*value;
-// 	bool	exported;
-// }	t_env;
-
 typedef struct s_history
 {
     char **entries;
@@ -67,6 +61,7 @@ typedef struct minishell
 	char	**env;
 	int 	*exported;
 	int		status; // last command status
+	bool	error_syntax;
 	t_history *history;
 	int     history_disabled;
 }	t_minishell;
@@ -178,22 +173,23 @@ int	gettoken(char **ps, char *es, char **q, char **eq);
 int	peek(char **ps, char *es, char *toks);
 
 // command.c
-struct cmd* execcmd();
-struct cmd* parseexec(char **ps, char *es);
-struct cmd* parsecmd(char *s);
+// struct cmd* execcmd();
+// struct cmd* parseexec(char **ps, char *es);
+// struct cmd* parsecmd(char *s);
 void runcmd(struct cmd *cmd, t_minishell *minishell);
 void exec_command(char *command, char **args);
 void control_cmd(t_cmd *cmd, t_minishell *minishell);
 
 // redirection.c
 // struct cmd* redircmd(struct cmd *subcmd, char *file, char *efile, int mode, mode_t right, int fd);
-struct cmd* redircmd(struct cmd *subcmd, char *file, char *efile, int mode, mode_t right, int fd, char *hdoc);
+// struct cmd* redircmd(struct cmd *subcmd, char *file, char *efile, int mode, mode_t right, int fd, char *hdoc);
 // struct cmd* parseredirs(struct cmd *cmd, char **ps, char *es);
-struct cmd* parseredirs(struct cmd *cmd, char **ps, char *es);
+char *process_heredoc(char *q, char *eq);
+
 
 // pipe.c
-struct cmd* pipecmd(struct cmd *left, struct cmd *right);
-struct cmd* parsepipe(char **ps, char *es);
+// struct cmd* pipecmd(struct cmd *left, struct cmd *right);
+// struct cmd* parsepipe(char **ps, char *es);
 struct cmd* parseline(char **ps, char *es);
 
 // line.c
@@ -270,6 +266,18 @@ void	unset_impl(t_cmd *cmd, t_minishell *minishell);
 
 // echo.c
 void	echo_impl(t_cmd *cmd, t_minishell *minishell);
+
+// parse.c
+t_cmd	*parseexec(char **ps, char *es, t_minishell *minishell);
+t_cmd	*parsepipe(char **ps, char *es, t_minishell *minishell);
+t_cmd	*parsecmd(char *s, t_minishell *minishell);
+t_cmd	*parseredirs(struct cmd *cmd, char **ps, char *es, t_minishell *minishell);
+
+// constructor.c
+t_cmd	*execcmd(void);
+t_cmd	*redircmd(t_cmd *subcmd, char *file, char *efile, char redir);
+t_cmd	*pipecmd(t_cmd *left, t_cmd *right);
+t_cmd	*redircmd_hdoc(t_cmd *subcmd, char *hdoc);
 
 void	print_vector(char **vector);
 

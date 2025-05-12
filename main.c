@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 22:34:17 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/08 22:48:41 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/12 22:43:14 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	main(int argc, char **argv, char **envp)
 	catch_signal();
 	while (1)
 	{
+		minishell.error_syntax = false;
 
 		// ONLY VALID FOR TESTER
 		if (isatty(fileno(stdin)))
@@ -94,7 +95,7 @@ int	main(int argc, char **argv, char **envp)
 		// pgm opt1 opt2 < file1 > file2
 		// atexit(check_leaks);
 		// exit(0);
-		cmd = parsecmd(input);
+		cmd = parsecmd(input, &minishell);
 		control_cmd(cmd, &minishell);
 		free(input);
 		// safe_free_minishell(&minishell);
