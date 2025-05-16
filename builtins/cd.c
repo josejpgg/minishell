@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 17:48:19 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/04 18:14:16 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/16 19:49:56 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ void static	prepare_arguments(t_cmd *cmd, t_minishell *minishell)
 
 void static	move_directory(t_execcmd *ecmd, t_minishell *minishell)
 {
+	char	*cd_path;
+	
 	if (chdir(ecmd->argv[1]) != 0)
 	{
 		ft_putstr_fd(PROMPT_ERROR, STDERR_FILENO);
@@ -43,7 +45,9 @@ void static	move_directory(t_execcmd *ecmd, t_minishell *minishell)
 		return ;
 	}
 	update_env_value(minishell, "OLDPWD", get_env_value(minishell, "PWD"), 1);
-	update_env_value(minishell, "PWD", getcwd(NULL, 0), 1);
+	cd_path = getcwd(NULL, 0);
+	update_env_value(minishell, "PWD", cd_path, 1);
+	free(cd_path);
 }
 
 void	cd_impl(t_cmd *cmd, t_minishell *minishell)
@@ -52,6 +56,7 @@ void	cd_impl(t_cmd *cmd, t_minishell *minishell)
 
 	ecmd = (t_execcmd *)cmd;
 	prepare_arguments(cmd, minishell);
+	
 	if (ecmd->argv[1][0] == '-')
 	{
 		ft_putstr_fd(PROMPT_ERROR, STDERR_FILENO);
@@ -59,9 +64,11 @@ void	cd_impl(t_cmd *cmd, t_minishell *minishell)
 		minishell->status = 1;
 		return ;
 	}
+	
 	if (ft_strlen(ecmd->argv[1]) > 0)
 		move_directory(ecmd, minishell);
 	else
 		free(ecmd->argv[1]);
+	
 	minishell->status = 0;
 }

@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:33:31 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/12 22:29:07 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/16 20:26:19 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ t_cmd	*parsecmd(char *s, t_minishell *minishell)
 
 	es = s + ft_strlen(s);
 	cmd = parsepipe(&s, es, minishell);
+	
 	if (!minishell->error_syntax)
 	{
 		peek(&s, es, "");
@@ -131,6 +132,7 @@ t_cmd	*parsecmd(char *s, t_minishell *minishell)
 			panic("syntax");
 		}
 		nulterminate(cmd);
+		
 	}
 	return (cmd);
 }

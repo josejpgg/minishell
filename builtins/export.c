@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 17:48:19 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/06 19:30:01 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/16 19:58:39 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ void	export_impl(t_cmd *cmd, t_minishell *minishell)
 	idx = 0;
 	ecmd = (t_execcmd *)cmd;
 	print_all_sorted(ecmd, minishell);
+
 	while (ecmd->argv[++idx])
 	{
 		init_var(arg);
@@ -119,13 +120,16 @@ void	export_impl(t_cmd *cmd, t_minishell *minishell)
 			return ;
 		ecmd->argv[idx] = expand_variables(ecmd->argv[idx], minishell);
 		remove_quotes(ecmd, idx);
+
 		exported = valid_if_exported(ecmd->argv[idx], arg[0], minishell);
 		split_params(arg, ecmd->argv[idx], minishell);
+
 		if (minishell->status == 1)
 			return ;
 		if (env_exists(minishell, arg[0]) && arg[1])
 			update_env_value(minishell, arg[0], arg[1], exported);
 		else
 			create_env_value(minishell, arg[0], arg[1], exported);
+
 	}
 }

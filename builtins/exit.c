@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 17:48:19 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/29 22:45:38 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/16 19:55:34 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	handle_numeric_exit(t_cmd *cmd, t_minishell *minishell)
 			ft_putstr_fd(PROMPT_ERROR, STDERR_FILENO);
 			ft_putstr_fd("exit: numeric argument required\n", STDERR_FILENO);
 			minishell->status = 255;
-			break ;
+			return ;
 		}
 		idx++;
 	}

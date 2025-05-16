@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 17:09:29 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/04 18:44:25 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/16 20:16:58 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,8 @@ void update_env_value(t_minishell *minishell, char *key, char *value, int export
 			// printf("value = %s\n", value);
 			// printf("key = %s\n", minishell->env[i]);
             free(minishell->env[i]);
-
+	
+	
             // Allocate space for "key=value\0"
             int total_len = len + 1 + len_value + 1;
             minishell->env[i] = safe_malloc(total_len);
@@ -91,6 +92,7 @@ void update_env_value(t_minishell *minishell, char *key, char *value, int export
             // Manually build the string: key + '=' + value
             strcpy(minishell->env[i], key);
 			strcat(minishell->env[i], "=");
+
 			if (!value)
 			{
 				strcat(minishell->env[i], "");
@@ -101,12 +103,49 @@ void update_env_value(t_minishell *minishell, char *key, char *value, int export
 				strcat(minishell->env[i], value);
 				minishell->exported[i] = exported;
 			}
+
             break ;
         }
     }
 }
 
 // create new environmental variable in minishell->env maintaining the old ones
+// void create_env_value(t_minishell *minishell, char *key, char *value, int exported)
+// {
+// 	int i = 0;
+// 	while (minishell->env[i])
+// 		i++;
+// 	char **new_env = safe_malloc(sizeof(char *) * (i + 2));
+// 	int *new_exported = safe_malloc(sizeof(int) * (i + 2));
+// 	i = -1;
+// 	while (minishell->env[++i])
+// 	{
+// 		new_env[i] = minishell->env[i];
+// 		new_exported[i] = minishell->exported[i];
+// 	}
+// 	// free all elements from minishell->env
+	
+	
+// 	if (exported == 1)
+// 		new_env[i] = ft_strjoin(key, "=");
+// 	else
+// 		new_env[i] = ft_strjoin(key, "");
+// 	if (!value)
+// 		new_env[i] = ft_strjoin(new_env[i], "");
+// 	else
+// 		new_env[i] = ft_strjoin(new_env[i], value);
+// 	new_exported[i] = exported;
+// 	new_env[i + 1] = NULL;
+// 	// new_exported[i + 1] = 1;
+// 	new_exported[i + 1] = NULL; // ESTA BIEN??
+// 	free(minishell->env);
+// 	free(minishell->exported);
+// 	minishell->env = new_env;
+// 	minishell->exported = new_exported;
+// 	atexit(check_leaks);
+// exit(0);
+// }
+
 void create_env_value(t_minishell *minishell, char *key, char *value, int exported)
 {
 	int i = 0;
@@ -114,23 +153,30 @@ void create_env_value(t_minishell *minishell, char *key, char *value, int export
 		i++;
 	char **new_env = safe_malloc(sizeof(char *) * (i + 2));
 	int *new_exported = safe_malloc(sizeof(int) * (i + 2));
+
 	i = -1;
 	while (minishell->env[++i])
 	{
 		new_env[i] = minishell->env[i];
 		new_exported[i] = minishell->exported[i];
 	}
+
+	char *tmp;
 	if (exported == 1)
-		new_env[i] = ft_strjoin(key, "=");
+		tmp = ft_strjoin(key, "=");
 	else
-		new_env[i] = ft_strjoin(key, "");
+		tmp = ft_strjoin(key, "");
+
 	if (!value)
-		new_env[i] = ft_strjoin(new_env[i], "");
+		new_env[i] = ft_strjoin(tmp, "");
 	else
-		new_env[i] = ft_strjoin(new_env[i], value);
+		new_env[i] = ft_strjoin(tmp, value);
+	free(tmp); // ✅ prevent leak
+
 	new_exported[i] = exported;
 	new_env[i + 1] = NULL;
-	new_exported[i + 1] = 1;
+	new_exported[i + 1] = 0; // optional
+
 	free(minishell->env);
 	free(minishell->exported);
 	minishell->env = new_env;
