@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/23 19:28:37 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/23 19:38:58 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,8 +185,10 @@ void control_cmd(t_cmd *cmd, t_minishell *minishell);
 // struct cmd* redircmd(struct cmd *subcmd, char *file, char *efile, int mode, mode_t right, int fd);
 // struct cmd* redircmd(struct cmd *subcmd, char *file, char *efile, int mode, mode_t right, int fd, char *hdoc);
 // struct cmd* parseredirs(struct cmd *cmd, char **ps, char *es);
-char *process_heredoc(char *q, char *eq);
+char *process_heredoc2(char *q, char *eq);
 
+// heredoc.c
+char	*process_heredoc(char *q, char *eq);
 
 // pipe.c
 // struct cmd* pipecmd(struct cmd *left, struct cmd *right);

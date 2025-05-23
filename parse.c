@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:33:31 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/23 19:33:33 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/23 19:38:27 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ t_cmd	*parseredirs(struct cmd *cmd, char **ps, char *es, t_minishell *minishell)
 		}
         if (tok == HDOC)
 		{
+            // hdoc = process_heredoc2(q, eq);
             hdoc = process_heredoc(q, eq);
             cmd = redircmd_hdoc(cmd, hdoc);
         }

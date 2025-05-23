@@ -6,15 +6,13 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:29:04 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/12 20:50:49 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/23 19:38:40 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-
-char *process_heredoc(char *q, char *eq)
+char *process_heredoc2(char *q, char *eq)
 {
     char *heredoc = NULL;
     char *line = NULL;
@@ -35,8 +33,8 @@ char *process_heredoc(char *q, char *eq)
         line = readline("> ");
         if (line == NULL)
             break ;
-        line = realloc(line, strlen(line) + 2); // Allocate space for '\n' and '\0'
-        strcat(line, "\n"); // Append newline character
+        line = realloc(line, strlen(line) + 2);
+        strcat(line, "\n");
         if (strncmp(line, str_delimiter, strlen(str_delimiter)) == 0 && line[strlen(str_delimiter)] == '\n')
             break ;
         heredoc = realloc(heredoc, strlen(heredoc) + strlen(line) + 1);
