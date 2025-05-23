@@ -14,7 +14,7 @@ history.c history2.c \
 ./builtins/cd.c ./builtins/echo.c ./builtins/env.c ./builtins/exit.c \
 ./builtins/export.c ./builtins/pwd.c ./builtins/unset.c \
 ./util/quote.c ./util/error.c ./util/util.c \
-parse.c constructor.c
+parse.c constructor.c nulterminate.c
 # READLINE := -lreadline -lncurses
 READLINE := -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline
 # READLINE := -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline
@@ -26,7 +26,7 @@ all: minishell
 	$(CC) $(READLINE) $(FLAGS) -c $< -o $@
 
 minishell: $(COMPILE)
-	$(CC) $(FLAGS) $(COMPILE) $(LIBFT_NAME) $(READLINE) -o ${PROGRAM_NAME}
+	$(CC) -g $(FLAGS) $(COMPILE) $(LIBFT_NAME) $(READLINE) -o ${PROGRAM_NAME}
 
 clean:
 	@rm -rf $(COMPILE)

@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:45:13 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/16 20:28:36 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/21 20:49:21 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ void run_internal(t_cmd *cmd, t_minishell *minishell)
 	else if (ft_strstr(ecmd->argv[0], "unset"))
 		unset_impl(cmd, minishell);
 	// free all variables from ecmd
+	// atexit(check_leaks);
+	// 	exit(0);
 }
 
 void run_external(t_cmd *cmd, t_minishell *minishell)

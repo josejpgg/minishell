@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 22:35:51 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/01 17:38:37 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/23 18:51:40 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,38 +35,6 @@ void print_expand_variable(t_cmd *cmd, int idx, int *pos, t_minishell *minishell
 	else
 		write(1, "", 1);// if variable not found print empty string
 	*pos += extend;
-}
-
-int is_valid_quote2(t_cmd *cmd, t_minishell *minishell)
-{
-	char quote;
-	int idx;
-	t_execcmd *ecmd;
-	int pos;
-	
-	ecmd = (t_execcmd *)cmd;
-	idx = 1;
-	quote = 0;
-	while (ecmd->argv[idx])
-	{
-		pos = 0;
-		while (ecmd->argv[idx][pos])
-		{
-			if (!quote && (ecmd->argv[idx][pos] == '\'' || ecmd->argv[idx][pos] == '\"'))
-				quote = ecmd->argv[idx][pos];
-			else if (quote && ecmd->argv[idx][pos] == quote)
-				quote = 0;
-			pos++;
-		}
-		idx++;
-	}
-	if (quote)
-	{
-		write(2, "Error: Unmatched quote\n", 23);
-		minishell->status = 1;
-		return (0);
-	}
-	return (1);
 }
 
 char *getenv_minishell(t_minishell *minishell, char *key)

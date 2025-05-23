@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/12 22:27:52 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/23 19:28:37 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,7 @@ void disable_echoctl(void);
 // safe_free.c
 void	safe_free_vector(char **split);
 void	safe_free_minishell(t_minishell *minishell);
+void free_cmd(t_cmd *cmd);
 
 // str_util
 int ft_strcountchr(char *str, char chr);
@@ -192,8 +193,11 @@ char *process_heredoc(char *q, char *eq);
 // struct cmd* parsepipe(char **ps, char *es);
 struct cmd* parseline(char **ps, char *es);
 
+// nulterminate.c
+t_cmd	*nulterminate(t_cmd *cmd);
+
 // line.c
-struct cmd* nulterminate(struct cmd *cmd);
+struct cmd* nulterminate2(t_cmd *cmd);
 void panic(char *s);
 int fork1(void);
 

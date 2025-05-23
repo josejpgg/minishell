@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 22:34:17 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/16 20:28:20 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/23 19:11:48 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,10 @@ int	main(int argc, char **argv, char **envp)
 		// safe_free_minishell(&minishell);
 		// atexit(check_leaks);
 		// exit(0);
+
+		// FREE EXECCMD FOR EACH WHILE LOOP
+		// CHECK OTHER STRUCTURES
+		// free_cmd(cmd);
 	}
 	safe_free_minishell(&minishell);
 	// atexit(check_leaks);
