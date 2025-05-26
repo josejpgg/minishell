@@ -6,24 +6,25 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 11:43:00 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/15 17:27:17 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/24 22:14:08 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// Ensure that three file descriptors are available (standard input, standard output, and standard error).
-void valid_std_fd(void)
+// Ensure that three file descriptors are available 
+// (standard input, standard output, and standard error).
+void	valid_std_fd(void)
 {
-	int fd;
-	
+	int	fd;
+
 	fd = safe_open("/dev/tty", O_RDWR, 0);
-	while(fd >= 0)
+	while (fd >= 0)
 	{
 		if (fd >= 3)
 		{
 			close(fd);
-			break;
+			break ;
 		}
 		fd = safe_open("/dev/tty", O_RDWR, 0);
 	}
@@ -37,9 +38,8 @@ void	valid_inital_param(int argc, char **envp, t_minishell *minishell)
 	init_env(minishell, envp);
 }
 
-void prepare_minishell(t_minishell *minishell)
+void	prepare_minishell(t_minishell *minishell)
 {
-	// minishell = safe_malloc(sizeof(t_minishell));
 	minishell->path_env = NULL;
 	minishell->env = NULL;
 	minishell->status = 0;

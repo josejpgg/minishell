@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 17:48:19 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/23 18:56:18 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/25 19:02:20 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,8 +124,8 @@ void	export_impl(t_cmd *cmd, t_minishell *minishell)
 		if (minishell->status == 1)
 			return ;
 		if (env_exists(minishell, arg[0]) && arg[1])
-			update_env_value(minishell, arg[0], arg[1], exported);
+			upd_env_value(minishell, arg[0], arg[1], exported);
 		else
-			create_env_value(minishell, arg[0], arg[1], exported);
+			new_env_value(minishell, arg[0], arg[1], exported);
 	}
 }

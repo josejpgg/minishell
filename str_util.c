@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 19:14:24 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/03/16 13:10:08 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/24 22:10:34 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,55 +51,81 @@ char	*trim_space_char(char *input)
 	return (input);
 }
 
-// Function to replace a string with another string
-// the first value is the main string
-// the second value is the string to be find and replaced
-// the third value is the string to replace
-char *ft_strreplace(char *str, char *old, char *new)
+int	count_occurrences(char *str, char *old)
 {
-	char *result;
-	int i, count = 0;
-	int newlen = ft_strlen(new);
-	int oldlen = ft_strlen(old);
+	int	count;
+	int	oldlen;
+	int	i;
 
-	// Counting the number of times old word
-	// occur in the string
-	for (i = 0; str[i] != '\0'; i++)
+	count = 0;
+	oldlen = ft_strlen(old);
+	i = 0;
+	while (str[i])
 	{
-		if (ft_strstr(&str[i], old) == &str[i])
+		if (ft_strncmp(&str[i], old, oldlen) == 0)
 		{
 			count++;
-			// Jumping to index after the old word.
-			i += oldlen - 1;
+			i += oldlen;
 		}
+		else
+			i++;
 	}
+	return (count);
+}
 
-	// Making new string of enough length
-	result = (char *)safe_malloc(i + count * (newlen - oldlen) + 1);
+char	*build_replaced_string(char *str, char *old, char *new, char *res)
+{
+	int		i;
+	int		newlen;
+	int		oldlen;
 
 	i = 0;
+	oldlen = ft_strlen(old);
+	newlen = ft_strlen(new);
 	while (*str)
 	{
-		// compare the substring with the result
-		if (ft_strstr(str, old) == str)
+		if (ft_strncmp(str, old, oldlen) == 0)
 		{
-			strcpy(&result[i], new);
+			ft_memcpy(&res[i], new, newlen);
 			i += newlen;
 			str += oldlen;
 		}
 		else
-			result[i++] = *str++;
+			res[i++] = *str++;
 	}
-	result[i] = '\0';
-	return (result);
+	res[i] = '\0';
+	return (res);
 }
 
-// Function to valid if a string has the open and close of a quote or double quote
-// Return true if the string is valid
-bool valid_quotes(char *input, char quote)
+// Function to replace a string with another string
+// the first value is the main string
+// the second value is the string to be find and replaced
+// the third value is the string to replace
+char	*ft_strreplace(char *str, char *old, char *new)
 {
-	int i;
-	int count;
+	int		count;
+	int		newlen;
+	int		oldlen;
+	int		totallen;
+	char	*result;
+
+	count = count_occurrences(str, old);
+	oldlen = ft_strlen(old);
+	newlen = ft_strlen(new);
+	totallen = ft_strlen(str) + count * (newlen - oldlen);
+	result = (char *)safe_malloc(totallen + 1);
+	if (!result)
+		return (NULL);
+	return (build_replaced_string(str, old, new, result));
+}
+
+// Function to valid if a string has the open and 
+// close of a quote or double quote
+// Return true if the string is valid
+bool	valid_quotes(char *input, char quote)
+{
+	int	i;
+	int	count;
 
 	i = -1;
 	count = 0;

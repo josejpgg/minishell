@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 17:48:19 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/16 19:49:56 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/25 19:02:03 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ void static	move_directory(t_execcmd *ecmd, t_minishell *minishell)
 		minishell->status = 1;
 		return ;
 	}
-	update_env_value(minishell, "OLDPWD", get_env_value(minishell, "PWD"), 1);
+	upd_env_value(minishell, "OLDPWD", get_env_value(minishell, "PWD"), 1);
 	cd_path = getcwd(NULL, 0);
-	update_env_value(minishell, "PWD", cd_path, 1);
+	upd_env_value(minishell, "PWD", cd_path, 1);
 	free(cd_path);
 }
 

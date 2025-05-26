@@ -6,23 +6,11 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/28 14:30:08 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/04/04 22:34:04 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/24 22:04:10 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	safe_free_vector_elem(char **split)
-{
-	int	i;
-
-	i = -1;
-	while (split[++i])
-	{
-		printf("freeing %s\n", split[i]);
-		free(split[i]);
-	}
-}
 
 /*
 * Function to add a new elemento to the vector.
@@ -80,9 +68,9 @@ void	ft_vector_trim(char **argv)
 	}
 }
 
-int ft_vector_size(char **split)
+int	ft_vector_size(char **split)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (split[i])
@@ -90,7 +78,7 @@ int ft_vector_size(char **split)
 	return (i);
 }
 
-void replace_element_index(char **split, int index, char *tmp)
+void	replace_element_index(char **split, int index, char *tmp)
 {
 	free(split[index]);
 	split[index] = tmp;
@@ -103,8 +91,8 @@ void replace_element_index(char **split, int index, char *tmp)
 char	**add_next_index_element(char **split, int index, char *tmp)
 {
 	char	**new;
-	int i;
-	int j;
+	int		i;
+	int		j;
 
 	i = -1;
 	new = (char **)safe_malloc(sizeof(char *) * (ft_vector_size(split) + 2));
@@ -116,26 +104,6 @@ char	**add_next_index_element(char **split, int index, char *tmp)
 		new[++i] = split[j];
 	return (new);
 }
-
-/*
-* Function to remove quotes from the element.
-*/
-// void remove_quotes(char **split, char quote)
-// {
-// 	int i;
-// 	int j;
-// 	char *tmp;
-
-// 	i = -1;
-// 	while (split[++i])
-// 	{
-// 		if (ft_strchr(split[i], quote))
-// 		{
-// 			tmp = ft_strtrim(split[i], &quote);
-// 			replace_element_index(split, i, tmp);
-// 		}
-// 	}
-// }
 
 void	print_vector(char **vector)
 {
