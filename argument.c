@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 21:18:47 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/23 22:24:43 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/30 18:15:23 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ static t_cmd	*parse_arg(t_cmd *ret, char **ps, char *es, t_minishell *ms)
 	}
 	cmd->argv[argc] = 0;
 	cmd->eargv[argc] = 0;
+	// print_vector(cmd->argv);
 	return (ret);
 }
 

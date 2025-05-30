@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/25 20:57:37 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/30 21:14:10 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,6 +173,7 @@ int		ft_strcountchr(char *str, char chr);
 char	*trim_space_char(char *input);
 char	*ft_strreplace(char *str, char *old, char *new);
 bool	valid_quotes(char *input, char quote);
+char	*remove_quotes_str(char *str);
 
 /* token.c */
 int		gettoken(char **ps, char *es, char **q, char **eq);

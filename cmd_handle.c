@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 21:40:49 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/28 22:17:25 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/30 22:41:53 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,13 @@ static void	setup_redirection(char *file, int mode)
 {
 	int	fd;
 
+	file = remove_quotes_str(file);
 	fd = open(file, mode, 0644);
 	if (fd < 0)
 	{
-		perror(PROMPT_ERROR);
+		ft_putstr_fd(PROMPT_ERROR, 2);
+		ft_putstr_fd(file, 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
 		exit(1);
 	}
 	if (mode == O_RDONLY)
@@ -52,6 +55,7 @@ static void	setup_redirection(char *file, int mode)
 	else
 		dup2(fd, STDOUT_FILENO);
 	close(fd);
+	free(file);
 }
 
 static void	setup_heredoc(char *hdoc)

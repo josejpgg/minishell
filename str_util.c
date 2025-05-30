@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/11 19:14:24 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/24 22:10:34 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/30 21:21:53 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,4 +137,26 @@ bool	valid_quotes(char *input, char quote)
 	if (count % 2 == 0)
 		return (true);
 	return (false);
+}
+
+char	*remove_quotes_str(char *str)
+{
+	char	*result;
+	char	tmp[2];
+	char	*tmp_result;
+
+	result = ft_strdup("");
+	tmp[1] = '\0';
+	while (*str)
+	{
+		if (*str != '\'' && *str != '\"')
+		{
+			tmp[0] = *str;
+			tmp_result = ft_strjoin(result, tmp);
+			free(result);
+			result = tmp_result;
+		}
+		str++;
+	}
+	return (result);
 }

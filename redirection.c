@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:29:04 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/23 21:17:05 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/30 22:40:11 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,26 @@ t_cmd	*parseredirs(t_cmd *cmd, char **ps, char *es, t_minishell *minishell)
 		}
 		if (tok == HDOC)
 			cmd = handle_heredoc_token(cmd, q, eq);
-		else if (tok == '<' || tok == '>' || tok == '+')
-			return (handle_redir_token(cmd, q, eq, tok));
+		else if (tok == '<')
+		{
+			// while (ft_strcountchr(q, '<')!=0)
+			// {
+			// 	tok = gettoken(ps, es, &q, &eq);
+			// 	if (gettoken(ps, es, &q, &eq) != 'a')
+			// 	{
+			// 		panic("syntax error near unexpected token.\n");
+			// 		minishell->status = 258;
+			// 		minishell->error_syntax = true;
+			// 		break ;
+			// 	}
+			// }
+			// return (handle_redir_token(cmd, q, eq, tok));
+			cmd = handle_redir_token(cmd, q, eq, tok);
+		}
+		else if (tok == '>' || tok == '+')
+		{
+			return (handle_redir_token(cmd, q, eq, tok)); //LEAK POR EL PRIMER < ??????
+		}
 	}
 	return (cmd);
 }
