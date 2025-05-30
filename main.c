@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 22:34:17 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/25 20:50:17 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/26 21:46:55 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	main(int argc, char **argv, char **envp)
 
 	prepare_minishell(&minishell);
 	valid_inital_param(argc, envp, &minishell);
-	disable_echoctl();//  DISABLE FOR TESTER
+	// disable_echoctl();//  DISABLE FOR TESTER
 	catch_signal();
 	while (1)
 	{

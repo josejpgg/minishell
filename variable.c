@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 22:32:10 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/23 22:36:47 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/26 22:32:47 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,11 @@ static char	*expand_chunk(char **s, char quote, t_minishell *minishell)
 
 	if (**s == '$' && quote != '\'')
 	{
+		if (*s + 1 == NULL || !ft_isalnum(*(*s + 1)) && *(*s + 1) != '_' && *(*s + 1) != '?')
+		{
+			(*s)++;
+			return (ft_strdup("$"));
+		}
 		(*s)++;
 		if (**s == '?')
 		{

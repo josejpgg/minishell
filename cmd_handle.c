@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 21:40:49 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/25 19:51:51 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/05/28 22:17:25 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static void	setup_redirection(char *file, int mode)
 	fd = open(file, mode, 0644);
 	if (fd < 0)
 	{
-		perror("redirection failed");
+		perror(PROMPT_ERROR);
 		exit(1);
 	}
 	if (mode == O_RDONLY)
@@ -81,6 +81,7 @@ void	handle_cmd_pipe(t_pipecmd *pcmd, t_minishell *minishell)
 	int		p[2];
 	pid_t	pid1;
 	pid_t	pid2;
+	int		status;
 
 	safe_pipe(p);
 	pid1 = safe_fork();
@@ -101,6 +102,10 @@ void	handle_cmd_pipe(t_pipecmd *pcmd, t_minishell *minishell)
 	}
 	close(p[0]);
 	close(p[1]);
-	waitpid(pid1, NULL, 0);
-	waitpid(pid2, NULL, 0);
+	waitpid(pid1, &status, 0);
+	waitpid(pid2, &status, 0);
+	if (WIFEXITED(status) != 0)
+	{
+		exit(WEXITSTATUS(status));
+	}
 }

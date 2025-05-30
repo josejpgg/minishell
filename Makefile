@@ -55,10 +55,12 @@ libft:
 	fi
 	git clone $(LIBFT_GH) $(LIBFT_PATH)
 
-test: all clean
+test: 
+	# all clean
 	# echo 'grep hi "<infile"' | ./minishell
 	# echo 'grep hi "<infile" <         ./test_files/infile' | ./minishell
-	echo '' | ./minishell
+	# ./tester builtins > result.txt
+	echo $(echo "aspas ->'") | ./minishell
 
 leaksMac:
 	export MallocStackLogging=1
