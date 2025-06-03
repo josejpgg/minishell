@@ -21,7 +21,7 @@ READLINE := -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/li
 # READLINE := -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline
 COMPILE := ${SOURCE:.c=.o}
 
-all: minishell
+all: minishell clean
 
 %.o: %.c
 	$(CC) $(READLINE) $(FLAGS) -c $< -o $@

@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/24 21:40:49 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/30 22:41:53 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/06/03 22:06:24 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@ void	handle_cmd_exec(t_execcmd *ecmd, t_minishell *minishell)
 			remove_quotes(ecmd, i);
 			i++;
 		}
+		// printf("exec_command: %s\n", ecmd->argv[0]);
+		// print_vector(ecmd->argv);
+		// exit(0);
 		exec_command(ecmd->argv[0], ecmd->argv);
 		ft_putstr_fd("exec failed ", 2);
 		ft_putstr_fd(ecmd->argv[0], 2);
@@ -73,10 +76,12 @@ static void	setup_heredoc(char *hdoc)
 
 void	handle_cmd_redir(t_redircmd *rcmd, t_minishell *minishell)
 {
+	// printf("rcmd->file: %s\n", rcmd->file);
 	if (rcmd->hdoc)
 		setup_heredoc(rcmd->hdoc);
 	else
 		setup_redirection(rcmd->file, rcmd->mode);
+	// exit(0);
 	runcmd(rcmd->cmd, minishell);
 }
 

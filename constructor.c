@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 20:03:21 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/30 19:17:16 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/06/03 22:07:28 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,28 +24,29 @@ t_cmd	*execcmd(void)
 
 t_cmd	*redircmd(t_cmd *subcmd, char *file, char *efile, char redir)
 {
-	t_redircmd	*cmd;
+	t_redircmd	*rcmd;
 
-	cmd = safe_malloc(sizeof(*cmd));
-	ft_memset(cmd, 0, sizeof(*cmd));
-	cmd->type = REDIR;
-	cmd->cmd = subcmd;
-	cmd->file = file;
-	cmd->efile = efile;
-	cmd->right = 0644;
-	cmd->fd = 1;
+	rcmd = safe_malloc(sizeof(*rcmd));
+	ft_memset(rcmd, 0, sizeof(*rcmd));
+	rcmd->type = REDIR;
+	rcmd->cmd = subcmd;
+	// printf("file : %s, efile: %s, redir: %c\n", file, efile, redir);
+	rcmd->file = file;
+	rcmd->efile = efile;
+	rcmd->right = 0644;
+	rcmd->fd = 1;
 	if (redir == '<')
 	{
-		cmd->mode = O_RDONLY;
-		cmd->right = 0;
-		cmd->fd = 0;
+		rcmd->mode = O_RDONLY;
+		rcmd->right = 0;
+		rcmd->fd = 0;
 	}
 	else if (redir == '>')
-		cmd->mode = O_CREAT | O_WRONLY | O_TRUNC;
+		rcmd->mode = O_CREAT | O_WRONLY | O_TRUNC;
 	else if (redir == '+')
-		cmd->mode = O_CREAT | O_WRONLY | O_APPEND;
-	cmd->hdoc = NULL;
-	return ((t_cmd *)cmd);
+		rcmd->mode = O_CREAT | O_WRONLY | O_APPEND;
+	rcmd->hdoc = NULL;
+	return ((t_cmd *)rcmd);
 }
 
 t_cmd	*redircmd_hdoc(t_cmd *subcmd, char *hdoc)

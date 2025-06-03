@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 21:18:47 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/30 18:15:23 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/06/03 22:05:38 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ static t_cmd	*parse_arg(t_cmd *ret, char **ps, char *es, t_minishell *ms)
 	while (!peek(ps, es, "|") && !ms->error_syntax)
 	{
 		tok = gettoken(ps, es, &q, &eq);
+		// printf("tok: %d, q: %s, eq: %s\n", tok, q, eq);
 		if (tok == 0)
 			break ;
 		if (tok != 'a')
@@ -42,7 +43,6 @@ static t_cmd	*parse_arg(t_cmd *ret, char **ps, char *es, t_minishell *ms)
 	}
 	cmd->argv[argc] = 0;
 	cmd->eargv[argc] = 0;
-	// print_vector(cmd->argv);
 	return (ret);
 }
 
@@ -54,7 +54,9 @@ t_cmd	*parseexec(char **ps, char *es, t_minishell *minishell)
 	t_cmd	*ret;
 
 	ret = execcmd();
-	ret = parseredirs(ret, ps, es, minishell);
+	// printf("ps: %s\n", *ps);
+	// ret = parseredirs(ret, ps, es, minishell); // POR SI COMMAND EMPIEZA CON <>
 	ret = parse_arg(ret, ps, es, minishell);
 	return (ret);
 }
+// ls >./outfile01 >./outfile02

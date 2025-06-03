@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/11 19:33:31 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/24 22:13:09 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/06/03 22:05:44 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ t_cmd	*parsepipe(char **ps, char *es, t_minishell *minishell)
 	t_cmd	*cmd;
 
 	cmd = parseexec(ps, es, minishell);
+	// printf("parsepipe-> ps: %s\n", *ps);
 	if (peek(ps, es, "|") && !minishell->error_syntax)
 	{
 		gettoken(ps, es, 0, 0);
