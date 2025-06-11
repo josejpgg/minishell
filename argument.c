@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 21:18:47 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/06/03 22:05:38 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/06/06 19:07:45 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,20 @@ static t_cmd	*parse_arg(t_cmd *ret, char **ps, char *es, t_minishell *ms)
 		if (tok == 0)
 			break ;
 		if (tok != 'a')
+		{
+			if (tok == '>')
+			{
+				ret = parseredirs(ret, ps, es, ms, true);
+				continue ;
+			}
 			panic("syntax ");
+		}
 		if (argc >= MAXARGS)
 			panic("too many args");
 		cmd->argv[argc] = q;
 		cmd->eargv[argc] = eq;
 		argc++;
-		ret = parseredirs(ret, ps, es, ms);
+		ret = parseredirs(ret, ps, es, ms, false);
 	}
 	cmd->argv[argc] = 0;
 	cmd->eargv[argc] = 0;

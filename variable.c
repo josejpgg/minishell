@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 22:32:10 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/26 22:32:47 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/06/07 21:08:33 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,35 @@ char	*expand_variables(char *arg, t_minishell *minishell)
 	{
 		if (handle_quote_state(*s, &quote))
 		{
+			s++;
+			continue ;
+		}
+		chunk = expand_chunk(&s, quote, minishell);
+		if (!chunk)
+			continue ;
+		result = strjoin_free(result, chunk);
+	}
+	return (result);
+}
+
+char	*expand_variables_main(char *arg, t_minishell *minishell)
+{
+	char	*s;
+	char	*result;
+	char	*chunk;
+	char	quote;
+
+	s = arg;
+	result = ft_strdup("");
+	quote = 0;
+	while (*s)
+	{
+		if (handle_quote_state(*s, &quote))
+		{
+			char	tmp[2];
+			tmp[0] = *s;
+			tmp[1] = '\0';
+			result = strjoin_free(result, ft_strdup(tmp));
 			s++;
 			continue ;
 		}

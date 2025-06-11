@@ -15,7 +15,7 @@ cmd_impl.c vector.c cmd_util.c builtin_impl.c \
 ./util/quote.c ./util/error.c ./util/util.c \
 parse.c constructor.c nulterminate.c heredoc.c argument.c \
 token_util.c variable.c cmd_handle.c \
-env_init.c env_create.c env_update.c
+env_init.c env_create.c env_update.c cmd_error.c
 # READLINE := -lreadline -lncurses
 READLINE := -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline
 # READLINE := -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline

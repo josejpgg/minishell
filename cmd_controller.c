@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:27:25 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/25 19:50:26 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/06/07 13:38:15 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ static void	search_in_path(t_execcmd *ecmd, t_minishell *minishell)
 		free(cmd);
 		if (access(full, F_OK) == 0)
 		{
-			// free(ecmd->argv[0]);
 			ecmd->argv[0] = full;
 			return ;
 		}
@@ -43,14 +42,7 @@ void	valid_command(t_execcmd *ecmd, t_minishell *minishell)
 {
 	if (ft_strchr("./", ecmd->argv[0][0]))
 	{
-		if (access(ecmd->argv[0], F_OK) == -1)
-		{
-			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(ecmd->argv[0], 2);
-			ft_putstr_fd(": command not found\n", 2);
-			exit(127);
-		}
-		return ;
+		exit(handle_access_error(ecmd->argv[0]));
 	}
 	search_in_path(ecmd, minishell);
 }
@@ -59,8 +51,7 @@ void	exec_command(char *command, char **args)
 {
 	if (execvp(command, args) == -1)
 	{
-		perror("exec failed");
-		exit(EXIT_FAILURE);
+		exit(handle_error(command));
 	}
 }
 

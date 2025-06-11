@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 22:34:17 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/26 21:46:55 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/06/07 21:12:38 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int	main(int argc, char **argv, char **envp)
 	t_minishell	minishell;
 	char		*input;
 	t_cmd		*cmd;
+	char *tmp;
 
 	prepare_minishell(&minishell);
 	valid_inital_param(argc, envp, &minishell);
@@ -43,6 +44,7 @@ int	main(int argc, char **argv, char **envp)
 			free(line);
 		}
 		// ONLY VALID FOR TESTER
+
 		catch_interactive(&minishell, input, "minishell$");
 		input = check_input_valid(input);
 		if (input[0] == '\0')
@@ -50,6 +52,22 @@ int	main(int argc, char **argv, char **envp)
 			free(input);
 			continue ;
 		}
+		if (!is_valid_quote_str(input, &minishell))
+			continue ;
+		// expand variables
+		tmp = input;
+		// save_history(tmp); // expand variables
+		input = expand_variables_main(input, &minishell);
+		// expand variables
+		
+		free(tmp); // expand variables
+		if (input[0] == '\0')
+		{
+			free(input);
+			continue ;
+		}
+		
+		// printf("1_input: %s\n", input);
 		cmd = parsecmd(input, &minishell);
 		control_cmd(cmd, &minishell);
 		free(input);

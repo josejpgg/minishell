@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 18:21:09 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/05/30 21:14:10 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/06/07 21:08:16 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@
 # include <limits.h>
 # include <stdbool.h>
 # include <sys/types.h>
+# include <dirent.h>
+# include <sys/stat.h>
 
 typedef enum e_type
 {
@@ -44,8 +46,16 @@ typedef enum e_type
 	EXPORT,
 	UNSET,
 	ENV,
-	EXIT
+	EXIT,
 }	t_type;
+
+typedef enum e_ms_error
+{
+	IS_DIR,
+	NO_FILE,
+	CMD_NOT_FOUND,
+	NO_PERM,
+}	t_ms_error;
 
 typedef struct s_history
 {
@@ -107,12 +117,11 @@ typedef struct redircmd
 
 typedef enum e_response_msg
 {
-	CMD_NOT_FOUND,
 	NO_SUCH_FILE,
 	PERM_DENIED,
 	AMBIGUOUS,
 	TOO_MANY_ARGS,
-	NUMERIC_REQUI
+	NUMERIC_REQUI,
 }	t_response_msg;
 
 typedef enum e_response_code
@@ -185,7 +194,7 @@ void	control_cmd(t_cmd *cmd, t_minishell *minishell);
 void	valid_command(t_execcmd *ecmd, t_minishell *minishell);
 
 /* redirection.c */
-t_cmd	*parseredirs(struct cmd *cmd, char **ps, char *es, t_minishell *mshell);
+t_cmd	*parseredirs(struct cmd *cmd, char **ps, char *es, t_minishell *mshell, bool is_redir);
 
 /* heredoc.c */
 char	*process_heredoc(char *q, char *eq);
@@ -208,6 +217,7 @@ char	*getenv_minishell(t_minishell *minishell, char *key);
 
 /* quote.c */
 int		is_valid_quote(t_cmd *cmd, t_minishell *minishell);
+int is_valid_quote_str(char *cmd, t_minishell *minishell);
 
 /* util.c */
 void	init_var(char *arg[2]);
@@ -229,6 +239,7 @@ char	**add_next_index_element(char **split, int index, char *tmp);
 char	*expand_variables(char *arg, t_minishell *minishell);
 void	remove_quotes(t_execcmd *ecmd, int idx);
 char	*remove_quotes_simple(char *str);
+char	*expand_variables_main(char *arg, t_minishell *minishell);
 
 /* controller.c */
 int		valid_builtins(t_cmd *cmd);
@@ -277,5 +288,9 @@ void	handle_cmd_pipe(t_pipecmd *pcmd, t_minishell *minishell);
 
 /* leaks.c */
 void	check_leaks(void);
+
+// cmd_error.c
+int handle_error(char *cmd);
+int handle_access_error(char *cmd);
 
 #endif

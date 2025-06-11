@@ -6,7 +6,7 @@
 /*   By: jgamarra <jgamarra@student.42madrid.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 21:29:04 by jgamarra          #+#    #+#             */
-/*   Updated: 2025/06/03 22:06:16 by jgamarra         ###   ########.fr       */
+/*   Updated: 2025/06/06 19:09:14 by jgamarra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,16 +130,23 @@ t_cmd	*get_last_cmd_node(t_cmd *cmd)
 // 	return (cmd);
 // }
 
-t_cmd	*parseredirs(t_cmd *cmd, char **ps, char *es, t_minishell *minishell)
+t_cmd	*parseredirs(t_cmd *cmd, char **ps, char *es, t_minishell *minishell, bool is_redir)
 {
 	int		tok;
 	char	*q;
 	char	*eq;
 	t_cmd	*exec_cmd;
-
-	while (peek(ps, es, "<>") && !minishell->error_syntax)
+	// printf("ps: %s\n", *ps);
+	while ((peek(ps, es, "<>") && !minishell->error_syntax) || is_redir)
 	{
-		tok = gettoken(ps, es, &q, &eq);
+		// printf("parseredirs\n");
+		if (is_redir)
+		{
+			tok = '>';
+			is_redir = false;
+		}
+		else
+			tok = gettoken(ps, es, &q, &eq);
 		if (gettoken(ps, es, &q, &eq) != 'a')
 		{
 			panic("syntax error near unexpected token.\n");
